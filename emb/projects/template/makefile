@@ -1,15 +1,17 @@
-CC      = ..\utils\toolchain\arm-none-eabi-gcc
-LD      = ..\utils\toolchain\arm-none-eabi-ld
-OCOP    = ..\utils\toolchain\arm-none-eabi-objcopy
-SZ      = ..\utils\toolchain\arm-none-eabi-size
-ODUM    = ..\utils\toolchain\arm-none-eabi-objdump
+CC      = ../utils/toolchain/arm-none-eabi-gcc
+LD      = ../utils/toolchain/arm-none-eabi-ld
+OCOP    = ../utils/toolchain/arm-none-eabi-objcopy
+SZ      = ../utils/toolchain/arm-none-eabi-size
+ODUM    = ../utils/toolchain/arm-none-eabi-objdump
+
+PDIR	= $(CURDIR)/../projects/
 
 # ======================================
-INC		= -Iinc
+INC	= -Iinc
 INC    += -I..\common\src
 
 # ======================================
-#ADDSRC  =	
+ADDSRC  =	
 #ADDSRC += 
 
 # ======================================
@@ -49,8 +51,13 @@ BDIR    = build\\#
 %.o:	.\asm\%.s
 	$(CC) -c -o $@ $< $(AFLAGS)
 
-all: main.o $(ADDSRC) $(ADDLIBS)
+$(PNAME): main.o $(ADDSRC) $(ADDLIBS)
 	$(LD) $(LDFLAGS) -g -o $(BDIR)$(TARGET).elf $^
 	$(OCOP) -O binary $(BDIR)$(TARGET).elf $(BDIR)$(TARGET).bin
 	$(SZ) $(BDIR)$(TARGET).elf
 #	$(ODUM) -S $(BDIR)$(TARGET).elf
+
+info:	
+	@echo $(CURDIR)
+	@echo $(PDIR)
+	@echo $(PNAME)
