@@ -5,15 +5,16 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/emb/board",
-                "${workspaceFolder}/emb/common/**",
-                "${workspaceFolder}/emb/target"
+                "C:/Users/ih/toolchain/",
+                "C:/Users/ih/toolchain/arm-none-eabi/include/c++/4.9.3/tr1/",
+                "C:/Users/ih/toolchain/arm-none-eabi/include/sys"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "C:\\MinGW\\bin\\gcc.exe",
+            "compilerPath": "C:\\Users\\ih\\VSCODE\\toolchain\\gcc.exe",
             "cStandard": "c11",
             "cppStandard": "gnu++14",
             "intelliSenseMode": "windows-gcc-x86"
