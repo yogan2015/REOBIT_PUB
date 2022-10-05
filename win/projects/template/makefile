@@ -1,8 +1,8 @@
-CC      = ../utils/toolchain/arm-none-eabi-gcc
-LD      = ../utils/toolchain/arm-none-eabi-ld
-OCOP    = ../utils/toolchain/arm-none-eabi-objcopy
-SZ      = ../utils/toolchain/arm-none-eabi-size
-ODUM    = ../utils/toolchain/arm-none-eabi-objdump
+CC      = ../utils/toolchain/gcc
+LD      = ../utils/toolchain/ld
+OCOP    = ../utils/toolchain/objcopy
+SZ      = ../utils/toolchain/size
+ODUM    = ../utils/toolchain/objdump
 
 PDIR	= $(CURDIR)/../projects/
 
