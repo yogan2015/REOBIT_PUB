@@ -1,29 +1,29 @@
-CC      = ../utils/toolchain/arm-none-eabi-gcc
-LD      = ../utils/toolchain/arm-none-eabi-ld
-OCOP    = ../utils/toolchain/arm-none-eabi-objcopy
-SZ      = ../utils/toolchain/arm-none-eabi-size
-ODUM    = ../utils/toolchain/arm-none-eabi-objdump
+CC      = ../utils/toolchain/gcc
+LD      = ../utils/toolchain/ld
+OCOP    = ../utils/toolchain/objcopy
+SZ      = ../utils/toolchain/size
+ODUM    = ../utils/toolchain/objdump
 
 PDIR	= $(CURDIR)/../projects/
 
 # ======================================
 INC	= -Iinc
-INC    += -I..\common\src
+#INC += 
 
 # ======================================
-ADDSRC  =	
+#ADDSRC  =	
 #ADDSRC += 
 
 # ======================================
-ADDLIBS = 
+#ADDLIBS = 
 #ADDLIBS+= lib\
 
 # ======================================
 DEF     = -DDEBUG
 
 # ======================================
-CFLAGS  = -mthumb -mcpu=cortex-m3 -g -O0 $(DEF) $(INC)
-AFLAGS  = -mthumb -mcpu=cortex-m3 -g 
+CFLAGS  = -g -O0 $(DEF) $(INC)
+AFLAGS  = -g 
 LDFLAGS = -Tscript.ld
 
 # ======================================
@@ -53,7 +53,7 @@ BDIR    = build\\#
 
 $(PNAME): main.o $(ADDSRC) $(ADDLIBS)
 	$(LD) $(LDFLAGS) -g -o $(BDIR)$(TARGET).elf $^
-	$(OCOP) -O binary $(BDIR)$(TARGET).elf $(BDIR)$(TARGET).bin
+	$(OCOP) -O binary $(BDIR)$(TARGET).exe
 	$(SZ) $(BDIR)$(TARGET).elf
 #	$(ODUM) -S $(BDIR)$(TARGET).elf
 
