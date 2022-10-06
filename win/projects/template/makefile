@@ -4,7 +4,7 @@ OCOP    = ../utils/toolchain/objcopy
 SZ      = ../utils/toolchain/size
 ODUM    = ../utils/toolchain/objdump
 
-PDIR	= $(CURDIR)/../projects/
+PDIR	= ../projects/
 
 # ======================================
 INC	= -Iinc
@@ -16,7 +16,7 @@ INC	= -Iinc
 
 # ======================================
 #ADDLIBS = 
-#ADDLIBS+= lib\
+#ADDLIBS+= lib
 
 # ======================================
 DEF     = -DDEBUG
@@ -24,40 +24,25 @@ DEF     = -DDEBUG
 # ======================================
 CFLAGS  = -g -O0 $(DEF) $(INC)
 AFLAGS  = -g 
-LDFLAGS = -Tscript.ld
+LDFLAGS = #
 
 # ======================================
 TARGET  = $(PROJECT)
 
 # ======================================
-BDIR    = build\\#
+BDIR    = $(PROJECT)/build/#
 
 # ======================================
 
 .PHONY: all clean
 
-%.o:	%.c
+%.o:	..\projects\$(PNAME)\src\%.c
 	$(CC) -c -o $@ $< $(CFLAGS)
-
-%.o:	.\src\%.c
-	$(CC) -c -o $@ $< $(CFLAGS)
-
-%.o:	.\src\rtu\%.c
-	$(CC) -c -o $@ $< $(CFLAGS)
-
-%.o:	.\SPL\src\%.c
-	$(CC) -c -o $@ $< $(CFLAGS)
-
-%.o:	.\asm\%.s
-	$(CC) -c -o $@ $< $(AFLAGS)
 
 $(PNAME): main.o $(ADDSRC) $(ADDLIBS)
-	$(LD) $(LDFLAGS) -g -o $(BDIR)$(TARGET).elf $^
-	$(OCOP) -O binary $(BDIR)$(TARGET).exe
-	$(SZ) $(BDIR)$(TARGET).elf
-#	$(ODUM) -S $(BDIR)$(TARGET).elf
+	$(CC) main.o -o $(PNAME).exe
 
 info:	
-	@echo $(CURDIR) #AFLAGS
+	@echo ass
 	@echo $(PDIR)
 	@echo $(PNAME)
