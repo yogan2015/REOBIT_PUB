@@ -1,0 +1,11 @@
+MENU2X.~c:71:18:MBS_MENU2X_Init	16	static
+MENU2X.~c:75:18:MBS_MENU2X_Exec	24	static
+MENU2X.~c:105:13:StartState	24	static
+MENU2X.~c:128:13:SelectGroup	16	static
+MENU2X.~c:151:13:SelectParam	24	static
+MENU2X.~c:186:13:EditParam	64	static
+MENU2X.~c:323:13:ShowParamValue	48	static
+MENU2X.~c:417:13:OnChangeGroup	16	static
+MENU2X.~c:423:13:OnEnterParam	16	static
+MENU2X.~c:433:13:OnChangeParam	24	static
+MENU2X.~c:455:13:clearStr	16	static

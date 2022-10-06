@@ -1,0 +1,12 @@
+Logic_Move_Rotate.~c:172:12:Func_Key_Switch	16	static
+Logic_Move_Rotate.~c:177:13:Func_Timer	16	static
+Logic_Move_Rotate.~c:196:13:Func_Servo	24	static
+Logic_Move_Rotate.~c:261:13:Func_Move_Free	24	static
+Logic_Move_Rotate.~c:330:13:Func_Zapusk	16	static
+Logic_Move_Rotate.~c:352:13:Func_Zahvat	16	static
+Logic_Move_Rotate.~c:391:13:Func_Postanovka	16	static
+Logic_Move_Rotate.~c:442:13:Func_Move	16	static
+Logic_Move_Rotate.~c:525:13:Func_Rotate	16	static
+Logic_Move_Rotate.~c:550:13:Func_Calibrovka	16	static
+Logic_Move_Rotate.~c:603:18:MBS_Logic_Move_Rotate_Init	16	static
+Logic_Move_Rotate.~c:607:18:MBS_Logic_Move_Rotate_Exec	16	static

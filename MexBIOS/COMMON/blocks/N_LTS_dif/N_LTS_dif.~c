@@ -1,0 +1,76 @@
+ 
+#ifdef __BORLANDC__
+#define _FUNC_CALL_  __stdcall
+#else
+#ifndef _FUNC_CALL_
+#define _FUNC_CALL_  
+#endif
+#endif
+ 
+#include <math.h>
+#include <string.h>
+#include <stdlib.h>
+#include <float.h>
+#include "IQmathLib.h"
+#include "chip.h"
+ 
+#include "kernel.h"
+extern struct MBS_KERNEL Kernel;
+#define MBS_getData(Addr)                      MBS_getGlobalData(&Kernel, Addr)
+#define MBS_setData(Addr, Data, Flag)          MBS_setGlobalData(&Kernel, Addr, Data, Flag)
+#define MBS_getPjtData(Addr, Len)              MBS_getProjectData(&Kernel, Addr, Len)
+#define MBS_setPjtData(Addr, Data, Flag, Len)  MBS_setProjectData(&Kernel, Addr, Data, Flag, Len)
+#define MBS_getMemSt()                         MBS_getMemStatus(&Kernel)
+ 
+extern float SimulationTime;
+ 
+#ifndef M_PI
+#define M_PI    3.14159265358979323846
+#endif
+ 
+typedef struct _N_LTS_dif_STR {
+  float  *AB;
+  float  *BC;
+  float  *phase;
+  float   A1cos;
+  float   A1sin;
+  float   A2cos;
+  float   A2sin;
+  float   Fd;
+  float   Ap;
+  float   Bp;
+  float   Cp;
+} N_LTS_dif_STR;
+ 
+
+// Do not initialize inputs!
+void _FUNC_CALL_ MBS_N_LTS_dif_Init(N_LTS_dif_STR *v)
+{
+
+}
+
+void _FUNC_CALL_ MBS_N_LTS_dif_Exec(N_LTS_dif_STR *v)
+{
+  float Acos, Bcos, Ccos;
+  float Asin, Bsin, Csin;
+  // Линейные составляющие в фазные
+  Acos = (-0.3333) * (2 * *v->AB + *v->BC);
+  Bcos = (0.3333) * (*v->AB - *v->BC);
+  Ccos = (0.3333) * (*v->AB + 2 * *v->BC);
+
+  // Восстановление векторов из проекций
+    // A
+    Asin = (Acos + v->Ap) * v-> Fd;
+    // B
+    Bsin = (Acos + v->Bp) * v-> Fd;
+    // C
+    Csin = (Acos + v->Cp) * v-> Fd;
+  //Переписвание переменных хранения
+  v->Ap = Acos;  v->Bp = Bcos;  v->Cp = Ccos;
+  //Вычисление симметричных составляющих
+  v->A1cos = (0.1666) * (2 * Acos - Bcos - Ccos - 1.732 * Bsin + 1.732 * Csin);
+  v->A1sin = (0.1666) * (2 * Asin - Bsin - Csin + 1.732 * Bcos - 1.732 * Ccos);
+  v->A2cos = (0.1666) * (2 * Acos - Bcos - Ccos + 1.732 * Bsin - 1.732 * Csin);
+  v->A2sin = (0.1666) * (2 * Asin - Bsin - Csin - 1.732 * Bcos + 1.732 * Ccos);
+}
+

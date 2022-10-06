@@ -1,0 +1,9 @@
+WAP.~c:96:18:MBS_WAP_Init	16	static
+WAP.~c:104:18:MBS_WAP_Exec	40	static
+WAP.~c:289:13:W_INIT	16	static
+WAP.~c:295:13:A_INIT	16	static
+WAP.~c:301:13:P_INIT	16	static
+WAP.~c:309:13:CUR_FORM	40	static
+WAP.~c:394:13:UDC_FORM	16	static
+WAP.~c:505:13:TEMP_FORM	24	static
+WAP.~c:610:13:TEMP_FORM_1	24	static

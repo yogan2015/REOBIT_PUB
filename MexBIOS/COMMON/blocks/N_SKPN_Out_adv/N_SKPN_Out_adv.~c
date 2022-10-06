@@ -1,0 +1,75 @@
+ 
+#ifdef __BORLANDC__
+#define _FUNC_CALL_  __stdcall
+#else
+#ifndef _FUNC_CALL_
+#define _FUNC_CALL_  
+#endif
+#endif
+ 
+#include <math.h>
+#include <string.h>
+#include <stdlib.h>
+#include <float.h>
+#include "IQmathLib.h"
+#include "chip.h"
+ 
+#include "kernel.h"
+extern struct MBS_KERNEL Kernel;
+#define MBS_getData(Addr)                      MBS_getGlobalData(&Kernel, Addr)
+#define MBS_setData(Addr, Data, Flag)          MBS_setGlobalData(&Kernel, Addr, Data, Flag)
+#define MBS_getPjtData(Addr, Len)              MBS_getProjectData(&Kernel, Addr, Len)
+#define MBS_setPjtData(Addr, Data, Flag, Len)  MBS_setProjectData(&Kernel, Addr, Data, Flag, Len)
+#define MBS_getMemSt()                         MBS_getMemStatus(&Kernel)
+ 
+extern float SimulationTime;
+ 
+#ifndef M_PI
+#define M_PI    3.14159265358979323846
+#endif
+ 
+typedef struct _N_SKPN_Out_adv_STR {
+  long   *STAGE;
+  long    vec;
+  long    vec0;
+  long    vec1;
+  long    vec2;
+  long    vec3;
+  long    vec4;
+  long    vec5;
+  long    vec6;
+} N_SKPN_Out_adv_STR;
+ 
+
+// Do not initialize inputs!
+void _FUNC_CALL_ MBS_N_SKPN_Out_adv_Init(N_SKPN_Out_adv_STR *v)
+{
+
+}
+
+void _FUNC_CALL_ MBS_N_SKPN_Out_adv_Exec(N_SKPN_Out_adv_STR *v)
+{
+  switch (*v->STAGE) {
+  case 0 :
+    v->vec = v->vec0;
+    break;
+  case 1 :
+    v->vec = v->vec1;
+    break;
+  case 2 :
+    v->vec = v->vec2;
+    break;
+  case 3 :
+    v->vec = v->vec3;
+    break;
+  case 4 :
+    v->vec = v->vec4;
+    break;
+  case 5 :
+    v->vec = v->vec5;
+    break;
+  case 6 :
+    v->vec = v->vec6;
+    break;}
+}
+
