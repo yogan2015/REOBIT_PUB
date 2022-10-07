@@ -1,6 +1,7 @@
 #ifndef MAINTEST_INC
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "REOTEST_DATA.h"
 struct REOTEST_INPUT testset1;
