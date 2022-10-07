@@ -3,9 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/emb/board",
+                "${workspaceFolder]/win/projects/REOTEST/inc/",
                 "C:/Users/ih/toolchain/",
                 "C:/Users/ih/toolchain/arm-none-eabi/include/c++/4.9.3/tr1/",
                 "C:/Users/ih/toolchain/arm-none-eabi/include/sys"

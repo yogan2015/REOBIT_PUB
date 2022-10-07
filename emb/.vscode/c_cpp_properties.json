@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/emb/board",
+                "${workspaceFolder]/win/projects/REOTEST/inc/",
+                "C:/Users/ih/toolchain/",
+                "C:/Users/ih/toolchain/arm-none-eabi/include/c++/4.9.3/tr1/",
+                "C:/Users/ih/toolchain/arm-none-eabi/include/sys"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "C:\\Users\\ih\\VSCODE\\toolchain\\gcc.exe",
+            "cStandard": "c11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "windows-gcc-x86",
+            "configurationProvider": "ms-vscode.makefile-tools"
+        }
+    ],
+    "version": 4
+}

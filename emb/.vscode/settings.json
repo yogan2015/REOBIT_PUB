@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "maintest.h": "c",
+        "reotest_data.h": "c"
+    }
+}
