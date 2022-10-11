@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "REOTEST_DATA.h"
-struct REOTEST_INPUT testset1;
-struct REOTEST_OUTPUT resset1;
+//#include "REOTEST_DATA.h"
+#include "rbt.h"
 
-void test_update(struct REOTEST_INPUT* in, struct REOTEST_OUTPUT* out);
+void test_update(union rbtu_inputs* in, union rbtu_outputs* out);
+void samplestring(char **ass, char *argv[]);
 #define MAINTEST_INC
 #endif

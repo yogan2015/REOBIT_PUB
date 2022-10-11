@@ -2,9 +2,27 @@
 FILE *f_inputs;
 FILE *f_outputs;
 
+void samplestring(char **ass, char *argv[])
+{
+    *ass = (char*)argv[1];
+    printf("%x(%x) - value(adr) of argv[1]\n", argv[1],*argv[1]);
+    printf("%x(%x) - value(adr) of output\n", ass,*ass);
+    printf("sample string:\"%s\"\n",argv[1]);
+}
 
-union REOTEST_DATA_U h_outputs;
-union REOTEST_DATA_U h_inputs;
+void main(int argc, char *argv[])
+{
+    char *first;
+    //samplestring(&first, argv);
+    //printf("%s\n", first);
+    //printf("%d:", rbt_get_input(argc, argv, &first));
+    //printf("%s\n", first);
+    int a = rbt_input_open(f_inputs, argc, argv, &first);
+    printf("%d : %s\n",a, first);
+    //fclose(f_inputs);   fclose(f_outputs);
+}
+
+#ifdef jopa
 void REOTEST_DEFAULT_HEADER(union REOTEST_DATA_U* HEADER, int SIZE)
 {
     time_t t = time(NULL);
@@ -29,9 +47,8 @@ void REOTEST_DEFAULT_HEADER(union REOTEST_DATA_U* HEADER, int SIZE)
     HEADER->h.term = '}';
 };
 
-void main(int argc, char *argv[])
-{
-    char err_input      = 0;
+
+char err_input      = 0;
     char err_output     = 0;
     char *c;
     for (int i=0; i<argc; i++)                                              // поиск входного файла в аргументах командной строки
@@ -95,6 +112,4 @@ void main(int argc, char *argv[])
         }
     putc(checksum, f_outputs);
     putc('}', f_outputs);
-
-    fclose(f_inputs);   fclose(f_outputs);
-}
+#endif

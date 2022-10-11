@@ -42,8 +42,8 @@ BDIR    = $(PROJECT)/build/#
 %.o:	$(PDIR)\%.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-test_$(TESTOBJECT): main.o $(TESTOBJECT).o $(ADDSRC) $(ADDLIBS)
-	$(CC) main.o $(TESTOBJECT).o -o $(PNAME).exe
+test_$(TESTOBJECT): main.o rbt.o $(TESTOBJECT).o $(ADDSRC) $(ADDLIBS)
+	$(CC) main.o rbt.o $(TESTOBJECT).o -o $(PNAME).exe
 
 info:	
 	@echo $(CURDIR)

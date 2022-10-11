@@ -57,17 +57,21 @@
     union rbtu_header
     {
         char c[16];
-        struct REOTEST_DATA_HEADER h;
+        struct rbt_header h;
     };
 
 // Прототипы функций
-    int     rbt_header_check(*FILE inputs);     // проверка заголовка
-    void    rbt_header_print(*FILE outputs);    // запись заголовка
 
-    void    rbt_frame_read(*FILE inputs, &rbtu_inputs frame);
-    void    rbt_frame_write(*FILE outputs, &rbtu_outputs frame);
+    int     rbt_get_input       (int argc, char* argv[], char** name);
+    int     rbt_get_output      (int argc, char* argv[], char** name);
+    
+    int     rbt_input_open      (FILE* inputs,  int argc, char* argv[], char** name);
+    int     rbt_output_open     (FILE* outputs, int argc, char* argv[], char** name);
 
-    void    rbt_update(&rbtu_inputs frame_in, &rbtu_outputs frame_out);
+    int     rbt_header_check    (FILE* inputs);     // проверка заголовка
+    void    rbt_header_print    (FILE* outputs);    // запись заголовка
 
-    int     rbt_get_input(int argc, char *argv[], char *name);
-    int     rbt_get_output(int argc, char *argv[], char *name);
+    void    rbt_frame_read      (FILE* inputs, union rbtu_inputs* frame);
+    void    rbt_frame_write     (FILE* outputs, union rbtu_outputs* frame);
+
+    void    rbt_update          (union rbtu_inputs* frame_in, union rbtu_outputs* frame_out);
