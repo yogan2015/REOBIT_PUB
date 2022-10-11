@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "reotest_data.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}

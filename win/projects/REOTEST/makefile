@@ -11,7 +11,7 @@ INC	= -I$(PDIR)./inc/
 #INC += 
 
 # ======================================
-#ADDSRC  =	
+#ADDSRC  = -src/	
 #ADDSRC += 
 
 # ======================================
@@ -42,8 +42,8 @@ BDIR    = $(PROJECT)/build/#
 %.o:	$(PDIR)\%.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-all: main.o $(ADDSRC) $(ADDLIBS)
-	$(CC) main.o -o $(PNAME).exe
+test_$(TESTOBJECT): main.o $(TESTOBJECT).o $(ADDSRC) $(ADDLIBS)
+	$(CC) main.o $(TESTOBJECT).o -o $(PNAME).exe
 
 info:	
 	@echo $(CURDIR)
