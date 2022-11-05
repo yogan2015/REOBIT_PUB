@@ -1,4 +1,5 @@
 #include "..\inc\rbt.h"
+
 int     rbt_get_input (int argc, char* argv[], char** name)
 {
     char *c;
@@ -70,7 +71,7 @@ int rbt_output_open(FILE* outputs, int argc, char* argv[], char** name)
     char* default_fname = "result.output";
     if (rbt_get_output(argc, argv, &fname))
     {
-        sareturn 1;   // анализ командной строки завершился с ошибкой
+        return 1;   // анализ командной строки завершился с ошибкой
     }
 }
 
@@ -95,4 +96,54 @@ void rbt_frame_read(FILE* inputs, union rbtu_inputs* frame)
 void rbt_frame_write(FILE* outputs, union rbtu_outputs* frame)
 {
 
+}
+
+
+void rbt_convert_csv()
+{
+    char c;
+    char str[255];
+    int row = 0;
+    int col = 0;
+    int pos = 0;
+    FILE *csv;
+    int a;
+    csv = fopen("buk.csv","r");
+    printf("JOPA\n");
+    while ((c = getc(csv))!=EOF)
+    {           
+        if ((c==';')||(c=='\n'))
+        {
+            printf("[%d:%d]:",row,col);
+            if(c==';') {col++;}
+            if(c=='\n'){col=0; row++;}
+            str[pos] = '\n';
+            printf("%f\n",atof(str));
+            pos = 0;
+        } else
+        {
+            str[pos] = c;
+            pos++;
+        }
+        //pos = (((c==';')||(c=='\n'))    ?(0)    :(++pos));
+        //printf("[%c] : %d\n", c, ((!pos) ? (255) : (pos-1)));
+        
+        //str[((!pos) ? (255) : (pos-1))] = c;
+        
+        //if (pos)
+        //{ 
+        //    str[pos-1] = c;
+        //    //printf("%c",c);
+        //} else
+        //{
+        //    //printf("; ");
+        //    str[pos-1]='\n';
+        //    //printf("%s:(%d;%d) ",str, row, col);
+        //    //printf("[%s] : %x\n",str,pos);
+        //}
+        //col = ((c==';')     ?(++col)    :(col));
+        //col = ((c=='\n')    ?(0)        :(col));
+        //row = ((c=='\n')    ?(++row)    :(row));
+    }
+    fclose(csv);
 }

@@ -1,5 +1,6 @@
-#include <time.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // структуры
     struct rbt_inputs
@@ -75,3 +76,5 @@
     void    rbt_frame_write     (FILE* outputs, union rbtu_outputs* frame);
 
     void    rbt_update          (union rbtu_inputs* frame_in, union rbtu_outputs* frame_out);
+
+    void    rbt_convert_csv     ();

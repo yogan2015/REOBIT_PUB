@@ -1,0 +1,1 @@
+#define rblocale_ru     SetConsoleCP(1251); SetConsoleOutputCP(1251); setlocale(LC_ALL, "Ru"); printf("Кириллица 1251 включена\n\n");
