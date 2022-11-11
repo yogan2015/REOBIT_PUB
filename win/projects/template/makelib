@@ -1,0 +1,9 @@
+CC      = gcc
+LD      = ld
+AR      = ar
+OCOP    = objcopy
+SZ      = size
+ODUM    = objdump
+
+all:    func1.o func2.o func3.o
+AR r librb.a *.o
