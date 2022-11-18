@@ -8,7 +8,9 @@
         "time.h": "c",
         "random": "c",
         "*.tcc": "c",
-        "glut.h": "c"
+        "glut.h": "c",
+        "string": "c",
+        "rbutil.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

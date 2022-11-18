@@ -1,2 +1,7 @@
 @echo building project "%1"
-.\utils\make\mingw32-make -f .\projects\%1\makefile %2 PNAME=%1
+@cd .\projects\%1\build
+.\..\..\..\utils\make\mingw32-make -f .\..\makefile lib
+@move *.a ..\lib
+.\..\..\..\utils\make\mingw32-make -f .\..\makefile all
+del *.o
+call baza

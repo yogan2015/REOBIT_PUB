@@ -1,0 +1,2 @@
+call baza
+pause
