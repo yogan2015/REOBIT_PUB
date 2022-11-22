@@ -1,5 +1,5 @@
 PNAME 	= baza
-PDIR	= ${CURDIR}/..#./projects/${θμÿ οπξεκςΰ}
+PDIR	= ${CURDIR}/..#./projects/${ }
 BDIR    = ${CURDIR}
 SOURCES = $(wildcard ${PDIR}/src/*.c)
 OBJECTS = $(wildcard ${BDIR}/*.o)
@@ -19,7 +19,7 @@ INC += -I${PDIR}/../../common/qol/inc/
 #ADDSRC += 
 
 # ======================================
-ADDLIBS = -L${PDIR}/lib -l${PNAME}	# βρε ξαϊεκςνϋε τΰιλϋ, κπξμε main.o οξμεωΰώςρÿ β win/${θμÿ οπξεκςΰ}/lib/lib${θμÿ οπξεκςΰ}.a
+ADDLIBS = -L${PDIR}/lib -l${PNAME}	#   ,  main.o   win/${ }/lib/lib${ }.a
 #ADDLIBS+= lib
 
 # ======================================
@@ -43,7 +43,7 @@ TARGET  = $(PROJECT)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 info:	
-	@echo "baza οπξεκς"
+	@echo "baza "
 	@echo CURDIR=$(CURDIR)
 	@echo PDIR=$(PDIR)
 	@echo BDIR=$(BDIR)

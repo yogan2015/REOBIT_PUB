@@ -10,7 +10,11 @@
         "*.tcc": "c",
         "glut.h": "c",
         "string": "c",
-        "rbutil.h": "c"
+        "rbutil.h": "c",
+        "system_stm32f10x.h": "c",
+        "cmsis_compiler.h": "c",
+        "stm32f10x.h": "c"
     },
-    "C_Cpp.errorSquiggles": "Disabled"
+    "C_Cpp.errorSquiggles": "Disabled",
+    "C_Cpp.dimInactiveRegions": false
 }
