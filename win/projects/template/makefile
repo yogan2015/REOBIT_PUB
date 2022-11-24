@@ -1,13 +1,14 @@
-PDIR	= ./projects/$(PNAME)
+PDIR	= ./projects/${PNAME}
+prefix	= "C:\mingw64\bin\"
 
-CC      = gcc
-LD      = ld
-OCOP    = objcopy
-SZ      = size
-ODUM    = objdump
+CC      = ${prefix}gcc
+LD      = ${prefix}ld
+OCOP    = ${prefix}objcopy
+SZ      = ${prefix}size
+ODUM    = ${prefix}objdump
 
 # ======================================
-INC	= -I$(PDIR)./inc/
+INC	= -I${PDIR}./inc/
 #INC += 
 
 # ======================================
@@ -22,29 +23,30 @@ INC	= -I$(PDIR)./inc/
 DEF     = -DDEBUG
 
 # ======================================
-CFLAGS  = -g -O0 $(DEF) $(INC)
+CFLAGS  = -g -O0 ${DEF} ${INC}
 AFLAGS  = -g 
 LDFLAGS = #
 
 # ======================================
-TARGET  = $(PROJECT)
+TARGET  = ${PROJECT}
 
 # ======================================
-BDIR    = $(PROJECT)/build/#
+BDIR    = ${PROJECT}/build/#
 
 # ======================================
 
 .PHONY: all clean
 
-%.o:	$(PDIR)\src\%.c
-	$(CC) -c -o $@ $< $(CFLAGS)
+%.o:	${PDIR}\src\%.c
+	${CC} -c -o $@ $< ${CFLAGS}
 
-%.o:	$(PDIR)\%.c
-	$(CC) -c -o $@ $< $(CFLAGS)
+%.o:	${PDIR}\%.c
+	${CC} -c -o $@ $< ${CFLAGS}
 
-all: main.o $(ADDSRC) $(ADDLIBS)
-	$(CC) main.o -o $(PNAME).exe
+all: main.o ${ADDSRC} ${ADDLIBS}
+	${CC} main.o -o ${PNAME}.exe
 
 info:	
-	@echo $(CURDIR)
-	@echo $(PDIR)
+	@echo ${CURDIR}
+	@echo ${PDIR}
+	@echo prefix = ${prefix}

@@ -1,7 +1,9 @@
-@echo building project "%1"
+@chcp 1251 >nul
+@cls
+@echo building project "%1" from "%cd%"
 @cd .\projects\%1\build
-.\..\..\..\utils\make\mingw32-make -f .\..\makefile lib
+mingw32-make -f .\..\makefile lib
 @move *.a ..\lib
-.\..\..\..\utils\make\mingw32-make -f .\..\makefile all
+mingw32-make -f .\..\makefile all
 del *.o
-call baza
+call %1

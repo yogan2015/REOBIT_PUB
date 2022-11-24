@@ -1,12 +1,13 @@
 PNAME 	= baza
 PDIR	= ${CURDIR}/..#./projects/${имя проекта}
 BDIR    = ${CURDIR}
-TARGET  = baza_f103
-CC		= arm-none-eabi-gcc
-LD		= arm-none-eabi-ld
-OCOP	= arm-none-eabi-objcopy
-SZ		= arm-none-eabi-size
-ODUM	= arm-none-eabi-objdump
+prefix	= C:/arm-none-eabi/bin
+
+CC		= ${prefix}/arm-none-eabi-gcc
+LD		= ${prefix}/arm-none-eabi-ld
+OCOP	= ${prefix}/arm-none-eabi-objcopy
+SZ		= ${prefix}/arm-none-eabi-size
+ODUM	= ${prefix}/arm-none-eabi-objdump
 
 #===( INCLUDE )===
 INC 	= -I${PDIR}/inc
@@ -42,11 +43,12 @@ LDFLAGS = -T${PDIR}/script.ld
 	$(CC) -c -o $@ $< $(AFLAGS)
 
 all:	main.o startup.o
-	${LD} ${LDFLAGS} -g -o ${TARGET}.elf $^
-	${OCOP} -O binary ${TARGET}.elf ${TARGET}.bin
-	${SZ} ${TARGET}.elf
-	${ODUM} -S $(TARGET).elf
+	${LD} ${LDFLAGS} -g -o ${PNAME}.elf $^
+	${OCOP} -O binary ${PNAME}.elf ${PNAME}.bin
+	${SZ} ${PNAME}.elf
+	${ODUM} -S ${PNAME}.elf
 
 info:
 	@echo PDIR = ${PDIR}
 	@echo BDIR = ${BDIR}
+	@echo project ${PNAME}

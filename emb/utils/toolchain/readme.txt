@@ -1,2 +1,2 @@
-РўСѓР»С‡РµР№РЅ СЃРєРѕРїРёСЂРѕРІР°С‚СЊ РІ C:\arm-none-eabi\
-Р”РѕР±Р°РІРёС‚СЊ C:\arm-none-eabi\ РІ PATH
+https://developer.arm.com/downloads/-/gnu-rm - качать тут
+в PATH добавлять не надо, достаточно в makefile установить корректный ${prefix}

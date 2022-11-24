@@ -1,4 +1,2 @@
-С‚СѓР»С‡РµР№РЅ СЂР°СЃРїРѕР»Р°РіР°С‚СЊ РІ C:\MinGW\bin
-Р”РѕР±Р°РІРёС‚СЊ C:\MinGW\bin РІ PATH
-
-https://github.com/jonasstrandstedt/MinGW
+1. https://winlibs.com/ - качать тут MinGW-w64
+в PATH добавлять не надо, достаточно в makefile установить корректный ${prefix}

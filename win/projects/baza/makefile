@@ -1,14 +1,16 @@
 PNAME 	= baza
-PDIR	= ${CURDIR}/..#./projects/${˜˜˜ ˜˜˜˜˜˜˜}
+PDIR	= ${CURDIR}/..
 BDIR    = ${CURDIR}
 SOURCES = $(wildcard ${PDIR}/src/*.c)
 OBJECTS = $(wildcard ${BDIR}/*.o)
-CC      = gcc
-LD      = ld
-OCOP    = objcopy
-SZ      = size
-ODUM    = objdump
-AR      = ar
+prefix	= C:/mingw64/bin
+
+CC      = ${prefix}/gcc
+LD      = ${prefix}/ld
+OCOP    = ${prefix}/objcopy
+SZ      = ${prefix}/size
+ODUM    = ${prefix}/objdump
+AR      = ${prefix}/ar
 
 # ======================================
 INC	= -I${PDIR}/inc/
@@ -19,7 +21,7 @@ INC += -I${PDIR}/../../common/qol/inc/
 #ADDSRC += 
 
 # ======================================
-ADDLIBS = -L${PDIR}/lib -l${PNAME}	# ˜˜˜ ˜˜˜˜˜˜˜˜˜ ˜˜˜˜˜, ˜˜˜˜˜ main.o ˜˜˜˜˜˜˜˜˜˜ ˜ win/${˜˜˜ ˜˜˜˜˜˜˜}/lib/lib${˜˜˜ ˜˜˜˜˜˜˜}.a
+ADDLIBS = -L${PDIR}/lib -l${PNAME}
 #ADDLIBS+= lib
 
 # ======================================
@@ -43,11 +45,12 @@ TARGET  = $(PROJECT)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 info:	
-	@echo "baza ˜˜˜˜˜˜"
+	@echo áàçîâûé ïðîåêò
 	@echo CURDIR=$(CURDIR)
 	@echo PDIR=$(PDIR)
 	@echo BDIR=$(BDIR)
-	@echo SOURCES=${SOURCES}
+	@echo SOURCES=$(SOURCES)
+	@echo äëÿ èçìåíåíèÿ èñïîëüçóåìîãî êîìïèëÿòîðà èñïîëüçóéòå êîìàíäó prefix=*
 
 lib: 
 	@$(CC) -c ${SOURCES}
