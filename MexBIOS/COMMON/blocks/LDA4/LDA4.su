@@ -1,9 +1,0 @@
-LDA4.~c:238:18:MBS_LDA4_Init	16	static
-LDA4.~c:243:18:MBS_LDA4_Exec	24	static
-LDA4.~c:307:13:OUTINIT	16	static
-LDA4.~c:312:14:INREAD	16	static
-LDA4.~c:421:13:OUTWRITE	24	static
-LDA4.~c:472:18:MODE	16	static
-LDA4.~c:646:15:WORD	24	static
-LDA4.~c:908:15:TIMERS	24	static
-LDA4.~c:937:15:PATH	24	static
