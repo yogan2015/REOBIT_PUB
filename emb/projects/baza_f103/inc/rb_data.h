@@ -1,0 +1,35 @@
+struct rb_data
+{
+    uint32_t ADC_GAIN_00;
+    uint32_t ADC_GAIN_01;
+    uint32_t ADC_GAIN_02;
+    uint32_t ADC_GAIN_03;
+    uint32_t ADC_GAIN_04;
+    uint32_t ADC_GAIN_05;
+    uint32_t ADC_GAIN_06;
+    uint32_t ADC_GAIN_07;
+    uint32_t ADC_GAIN_08;
+    uint32_t ADC_GAIN_09;
+    uint32_t ADC_GAIN_10;
+    uint32_t ADC_GAIN_11;
+    uint32_t ADC_GAIN_12;
+    uint32_t ADC_GAIN_13;
+    uint32_t ADC_GAIN_14;
+    uint32_t ADC_GAIN_15;
+    uint32_t ADC_OFFS_00;
+    uint32_t ADC_OFFS_01;
+    uint32_t ADC_OFFS_02;
+    uint32_t ADC_OFFS_03;
+    uint32_t ADC_OFFS_04;
+    uint32_t ADC_OFFS_05;
+    uint32_t ADC_OFFS_06;
+    uint32_t ADC_OFFS_07;
+    uint32_t ADC_OFFS_08;
+    uint32_t ADC_OFFS_09;
+    uint32_t ADC_OFFS_10;
+    uint32_t ADC_OFFS_11;
+    uint32_t ADC_OFFS_12;
+    uint32_t ADC_OFFS_13;
+    uint32_t ADC_OFFS_14;
+    uint32_t ADC_OFFS_15;
+};

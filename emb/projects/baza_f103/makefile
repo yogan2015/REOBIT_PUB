@@ -46,7 +46,7 @@ all:	main.o startup.o
 	${LD} ${LDFLAGS} -g -o ${PNAME}.elf $^
 	${OCOP} -O binary ${PNAME}.elf ${PNAME}.bin
 	${SZ} ${PNAME}.elf
-	${ODUM} -S ${PNAME}.elf
+	${ODUM} -D ${PNAME}.elf
 
 info:
 	@echo PDIR = ${PDIR}

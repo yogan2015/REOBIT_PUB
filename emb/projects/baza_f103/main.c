@@ -1,7 +1,51 @@
 #ifdef RELPATH
     #include "main.h"
+    #include "rb_data.h"
 #else
     #include "./inc/main.h"
+    #include "./inc/rb_data.h"
+#endif
+
+#ifndef ndef
+volatile uint32_t bradis_log[32] __attribute__((section(".ass")))=
+{
+    0x00000001,
+    0x00000002,
+    0x00000003,
+    0x00000004,
+    0x00000005,
+    0x00000006,
+    0x00000007,
+    0x00000008,
+    0x00000009,
+    0x00000001,
+    0x00000002,
+    0x00000003,
+    0x00000004,
+    0x00000005,
+    0x00000006,
+    0x00000007,
+    0x00000008,
+    0x00000009,
+    0x00000001,
+    0x00000002,
+    0x00000003,
+    0x00000004,
+    0x00000005,
+    0x00000006,
+    0x00000007,
+    0x00000008,
+    0x00000009,
+    0x00000001,
+    0x00000002,
+    0x00000003,
+    0x00000004,
+    0x00000005
+};
+volatile struct rb_data a  __attribute__((section(".ass")))= {
+    .ADC_GAIN_00 = 0xDEADBEEF,
+    .ADC_OFFS_15 = 0xDED0BABA
+};
 #endif
 
 void SystemInit()   // Настройка RCC на 72 MHz
@@ -67,5 +111,5 @@ void SystemInit()   // Настройка RCC на 72 MHz
 
 void main()
 {
-    ;
+
 }

@@ -13,7 +13,8 @@
         "rbutil.h": "c",
         "system_stm32f10x.h": "c",
         "cmsis_compiler.h": "c",
-        "stm32f10x.h": "c"
+        "stm32f10x.h": "c",
+        "cmsis_gcc.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.dimInactiveRegions": false

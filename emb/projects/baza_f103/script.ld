@@ -22,8 +22,10 @@ SECTIONS
 	.jopa	:
 	{
 		. = ALIGN(4);
+		*(.ass)
+		KEEP(*(.ass))
 		*(.jopa)
-	} >FLASH1
+	} >FLASH2
 
 	.rodata	:
 	{
