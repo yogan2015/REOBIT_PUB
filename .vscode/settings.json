@@ -17,7 +17,8 @@
         "cmsis_gcc.h": "c",
         "sdl.h": "c",
         "sdl_main.h": "c",
-        "close_code.h": "c"
+        "close_code.h": "c",
+        "cstdint": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.dimInactiveRegions": false
