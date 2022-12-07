@@ -1,4 +1,4 @@
-PNAME 	= RB-nucleo-H743
+PNAME 	= nucleo-H743
 PDIR	= ${CURDIR}/..#./projects/${имя проекта}
 BDIR    = ${CURDIR}
 prefix	= C:/arm-none-eabi/bin
@@ -8,6 +8,7 @@ LD		= ${prefix}/arm-none-eabi-gcc
 OCOP	= ${prefix}/arm-none-eabi-objcopy
 SZ		= ${prefix}/arm-none-eabi-size
 ODUM	= ${prefix}/arm-none-eabi-objdump
+GDB		= ${prefix}/arm-none-eabi-gdb
 
 #===( INCLUDE )===
 INC 	= -I${PDIR}/inc
@@ -55,3 +56,6 @@ info:
 	@echo PDIR = ${PDIR}
 	@echo BDIR = ${BDIR}
 	@echo project ${PNAME}
+
+debug:	${PNAME}.elf
+	${GDB} $< -x run.gdb
