@@ -46,7 +46,6 @@ LDFLAGS = -T${PDIR}/script.ld --specs=nosys.specs ${ADDLIB}
 	$(CC) -c -o $@ $< $(AFLAGS)
 
 all:	main.o startup.o
-	@echo shell time
 	${LD} ${LDFLAGS} -g -o ${PNAME}.elf $^
 	${OCOP} -O binary ${PNAME}.elf ${PNAME}.bin
 	${SZ} ${PNAME}.elf
