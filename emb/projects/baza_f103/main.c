@@ -107,6 +107,7 @@ void SystemInit()   // Настройка RCC на 72 MHz
     RCC->CFGR   &= ~RCC_CFGR_SW;
     RCC->CFGR   |=  RCC_CFGR_SW_PLL;        //  Устанавливаем PLL в качестве источника SYSCLK
     while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);
+    main();
 }
 
 void main()

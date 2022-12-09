@@ -1784,7 +1784,11 @@ Disassembly of section .debug_info:
  908:	00001e00 	andeq	r1, r0, r0, lsl #28
  90c:	55000200 	strpl	r0, [r0, #-512]	; 0xfffffe00
  910:	04000001 	streq	r0, [r0], #-1
+<<<<<<< HEAD
  914:	0001ad01 	andeq	sl, r1, r1, lsl #26
+=======
+ 914:	0001b401 	andeq	fp, r1, r1, lsl #8
+>>>>>>> 469ac91aa0443141de6d041a8146b3d47055dced
  918:	00000000 	andeq	r0, r0, r0
  91c:	00054700 	andeq	r4, r5, r0, lsl #14
  920:	0002b700 	andeq	fp, r2, r0, lsl #14
@@ -1959,6 +1963,7 @@ Disassembly of section .debug_line:
   b8:	5f746962 	svcpl	0x00746962
   bc:	5c627570 	cfstr64pl	mvdx7, [r2], #-448	; 0xfffffe40
   c0:	5c626d65 	stclpl	13, cr6, [r2], #-404	; 0xfffffe6c
+<<<<<<< HEAD
   c4:	5c6e6d63 	stclpl	13, cr6, [lr], #-396	; 0xfffffe74
   c8:	67726174 			; <UNDEFINED> instruction: 0x67726174
   cc:	735c7465 	cmpvc	ip, #1694498816	; 0x65000000
@@ -2000,6 +2005,49 @@ Disassembly of section .debug_line:
  15c:	1405b401 	strne	fp, [r5], #-1025	; 0xfffffbff
  160:	3d3d3d3e 	ldccc	13, cr3, [sp, #-248]!	; 0xffffff08
  164:	3d3d3d3d 	ldccc	13, cr3, [sp, #-244]!	; 0xffffff0c
+=======
+  c4:	6a6f7270 	bvs	1bdca8c <_Min_Stack_Size+0x1bdc68c>
+  c8:	73746365 	cmnvc	r4, #-1811939327	; 0x94000001
+  cc:	63756e5c 	cmnvs	r5, #92, 28	; 0x5c0
+  d0:	5f6f656c 	svcpl	0x006f656c
+  d4:	35343768 	ldrcc	r3, [r4, #-1896]!	; 0xfffff898
+  d8:	5c34665f 	ldcpl	6, cr6, [r4], #-380	; 0xfffffe84
+  dc:	00636e69 	rsbeq	r6, r3, r9, ror #28
+  e0:	69616d00 	stmdbvs	r1!, {r8, sl, fp, sp, lr}^
+  e4:	00632e6e 	rsbeq	r2, r3, lr, ror #28
+  e8:	5f000001 	svcpl	0x00000001
+  ec:	61666564 	cmnvs	r6, r4, ror #10
+  f0:	5f746c75 	svcpl	0x00746c75
+  f4:	65707974 	ldrbvs	r7, [r0, #-2420]!	; 0xfffff68c
+  f8:	00682e73 	rsbeq	r2, r8, r3, ror lr
+  fc:	5f000002 	svcpl	0x00000002
+ 100:	69647473 	stmdbvs	r4!, {r0, r1, r4, r5, r6, sl, ip, sp, lr}^
+ 104:	682e746e 	stmdavs	lr!, {r1, r2, r3, r5, r6, sl, ip, sp, lr}
+ 108:	00000300 	andeq	r0, r0, r0, lsl #6
+ 10c:	336d7473 	cmncc	sp, #1929379840	; 0x73000000
+ 110:	34376832 	ldrtcc	r6, [r7], #-2098	; 0xfffff7ce
+ 114:	2e787835 	mrccs	8, 3, r7, cr8, cr5, {1}
+ 118:	00040068 	andeq	r0, r4, r8, rrx
+ 11c:	01050000 	mrseq	r0, (UNDEF: 5)
+ 120:	40020500 	andmi	r0, r2, r0, lsl #10
+ 124:	03081004 	movweq	r1, #32772	; 0x8004
+ 128:	09050109 	stmdbeq	r5, {r0, r3, r8}
+ 12c:	2f12053d 	svccs	0x0012053d
+ 130:	68150583 	ldmdavs	r5, {r0, r1, r7, r8, sl}
+ 134:	05671105 	strbeq	r1, [r7, #-261]!	; 0xfffffefb
+ 138:	23052e09 	movwcs	r2, #24073	; 0x5e09
+ 13c:	03040200 	movweq	r0, #16896	; 0x4200
+ 140:	00090520 	andeq	r0, r9, r0, lsr #10
+ 144:	3c010402 	cfstrscc	mvf0, [r1], {2}
+ 148:	054b1505 	strbeq	r1, [fp, #-1285]	; 0xfffffafb
+ 14c:	09056711 	stmdbeq	r5, {r0, r4, r8, r9, sl, sp, lr}
+ 150:	0023052e 	eoreq	r0, r3, lr, lsr #10
+ 154:	20030402 	andcs	r0, r3, r2, lsl #8
+ 158:	02000905 	andeq	r0, r0, #81920	; 0x14000
+ 15c:	053c0104 	ldreq	r0, [ip, #-260]!	; 0xfffffefc
+ 160:	01054715 	tsteq	r5, r5, lsl r7
+ 164:	3e1405b4 	cfcmp64cc	r0, mvdx4, mvdx4
+>>>>>>> 469ac91aa0443141de6d041a8146b3d47055dced
  168:	3d3d3d3d 	ldccc	13, cr3, [sp, #-244]!	; 0xffffff0c
  16c:	3d3d3d3d 	ldccc	13, cr3, [sp, #-244]!	; 0xffffff0c
  170:	3d3d3d3d 	ldccc	13, cr3, [sp, #-244]!	; 0xffffff0c
@@ -2009,6 +2057,7 @@ Disassembly of section .debug_line:
  180:	2f2f2f2f 	svccs	0x002f2f2f
  184:	2f2f2f2f 	svccs	0x002f2f2f
  188:	2f2f2f2f 	svccs	0x002f2f2f
+<<<<<<< HEAD
  18c:	2f302f2f 	svccs	0x00302f2f
  190:	2f302f2f 	svccs	0x00302f2f
  194:	052f2f2f 	streq	r2, [pc, #-3887]!	; fffff26d <_estack+0xeffb726d>
@@ -2058,6 +2107,59 @@ Disassembly of section .debug_line:
  244:	f0030810 			; <UNDEFINED> instruction: 0xf0030810
  248:	01020100 	mrseq	r0, (UNDEF: 18)
  24c:	Address 0x0000024c is out of bounds.
+=======
+ 18c:	2f2f2f2f 	svccs	0x002f2f2f
+ 190:	2f2f2f2f 	svccs	0x002f2f2f
+ 194:	2f2f302f 	svccs	0x002f302f
+ 198:	2f2f302f 	svccs	0x002f302f
+ 19c:	05052f2f 	streq	r2, [r5, #-3887]	; 0xfffff0d1
+ 1a0:	052e1a03 	streq	r1, [lr, #-2563]!	; 0xfffff5fd
+ 1a4:	054d2f01 	strbeq	r2, [sp, #-3841]	; 0xfffff0ff
+ 1a8:	01053d09 	tsteq	r5, r9, lsl #26
+ 1ac:	0230852f 	eorseq	r8, r0, #197132288	; 0xbc00000
+ 1b0:	01010004 	tsteq	r1, r4
+ 1b4:	0000009e 	muleq	r0, lr, r0
+ 1b8:	00580003 	subseq	r0, r8, r3
+ 1bc:	01020000 	mrseq	r0, (UNDEF: 2)
+ 1c0:	000d0efb 	strdeq	r0, [sp], -fp
+ 1c4:	01010101 	tsteq	r1, r1, lsl #2
+ 1c8:	01000000 	mrseq	r0, (UNDEF: 0)
+ 1cc:	43010000 	movwmi	r0, #4096	; 0x1000
+ 1d0:	4f572f3a 	svcmi	0x00572f3a
+ 1d4:	522f4b52 	eorpl	r4, pc, #83968	; 0x14800
+ 1d8:	49424f45 	stmdbmi	r2, {r0, r2, r6, r8, r9, sl, fp, lr}^
+ 1dc:	55505f54 	ldrbpl	r5, [r0, #-3924]	; 0xfffff0ac
+ 1e0:	6d652f42 	stclvs	15, cr2, [r5, #-264]!	; 0xfffffef8
+ 1e4:	72702f62 	rsbsvc	r2, r0, #392	; 0x188
+ 1e8:	63656a6f 	cmnvs	r5, #454656	; 0x6f000
+ 1ec:	6e2f7374 	mcrvs	3, 1, r7, cr15, cr4, {3}
+ 1f0:	656c6375 	strbvs	r6, [ip, #-885]!	; 0xfffffc8b
+ 1f4:	37685f6f 	strbcc	r5, [r8, -pc, ror #30]!
+ 1f8:	465f3534 			; <UNDEFINED> instruction: 0x465f3534
+ 1fc:	75622f34 	strbvc	r2, [r2, #-3892]!	; 0xfffff0cc
+ 200:	2f646c69 	svccs	0x00646c69
+ 204:	00002e2e 	andeq	r2, r0, lr, lsr #28
+ 208:	72617473 	rsbvc	r7, r1, #1929379840	; 0x73000000
+ 20c:	2e707574 	mrccs	5, 3, r7, cr0, cr4, {3}
+ 210:	00010073 	andeq	r0, r1, r3, ror r0
+ 214:	05000000 	streq	r0, [r0, #-0]
+ 218:	100a9c02 	andne	r9, sl, r2, lsl #24
+ 21c:	013c0308 	teqeq	ip, r8, lsl #6
+ 220:	21213131 			; <UNDEFINED> instruction: 0x21213131
+ 224:	21232121 			; <UNDEFINED> instruction: 0x21232121
+ 228:	21212321 			; <UNDEFINED> instruction: 0x21212321
+ 22c:	21212122 			; <UNDEFINED> instruction: 0x21212122
+ 230:	21232123 			; <UNDEFINED> instruction: 0x21232123
+ 234:	032f3023 			; <UNDEFINED> instruction: 0x032f3023
+ 238:	2f342059 	svccs	0x00342059
+ 23c:	2e0e032f 	cdpcs	3, 0, cr0, cr14, cr15, {1}
+ 240:	0002022f 	andeq	r0, r2, pc, lsr #4
+ 244:	05000101 	streq	r0, [r0, #-257]	; 0xfffffeff
+ 248:	100aec02 	andne	lr, sl, r2, lsl #24
+ 24c:	00f00308 	rscseq	r0, r0, r8, lsl #6
+ 250:	00010201 	andeq	r0, r1, r1, lsl #4
+ 254:	Address 0x00000254 is out of bounds.
+>>>>>>> 469ac91aa0443141de6d041a8146b3d47055dced
 
 
 Disassembly of section .debug_str:
