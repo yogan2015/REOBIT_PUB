@@ -11,15 +11,16 @@ ODUM	= ${prefix}/arm-none-eabi-objdump
 
 #===( INCLUDE )===
 INC 	= -I${PDIR}/inc
-INC    += -I${PDIR}/../../target/stm32f103/CMSIS/core
-INC    += -I${PDIR}/../../target/stm32f103/CMSIS/device
+INC    += -I${PDIR}/../../cmn/CMSIS
+INC    += -I${PDIR}/../../cmn/core
+INC    += -I${PDIR}/../../cmn/target/stm32f10x
 
 #===( SOURCES )===
 #SRC 	= 
 #SRC   +=
 
 #===( LIBS )===
-#ADDLIB	= -L../lib
+ADDLIB	= -L${PDIR}/../../cmn/stdlib
 #ADDLIB += -lmodbus.o
 
 #===( DEFINE )===
@@ -46,7 +47,7 @@ all:	main.o startup.o
 	${LD} ${LDFLAGS} -g -o ${PNAME}.elf $^
 	${OCOP} -O binary ${PNAME}.elf ${PNAME}.bin
 	${SZ} ${PNAME}.elf
-	${ODUM} -D ${PNAME}.elf
+#	${ODUM} -D ${PNAME}.elf
 
 info:
 	@echo PDIR = ${PDIR}
