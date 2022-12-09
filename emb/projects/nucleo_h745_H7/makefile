@@ -1,4 +1,4 @@
-PNAME 	= nucleo-H743
+PNAME 	= nucleo-H745-H7
 PDIR	= ${CURDIR}/..#./projects/${имя проекта}
 BDIR    = ${CURDIR}
 prefix	= C:/arm-none-eabi/bin

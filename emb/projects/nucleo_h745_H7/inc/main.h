@@ -1,5 +1,5 @@
 #ifdef RELPATH
     #include "stm32h745xx.h"
 #else
-    #include "stm32h745xx.h"
+    #include "./stm32h745xx.h"
 #endif

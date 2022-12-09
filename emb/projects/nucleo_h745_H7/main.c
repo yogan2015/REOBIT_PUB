@@ -9,6 +9,7 @@
 void main()
 {
     int a = 1;
+    
     RCC->AHB4ENR |= RCC_AHB4ENR_GPIOBEN;
     GPIOB->MODER &= (~(GPIO_MODER_MODE14_Msk | GPIO_MODER_MODE0_Msk) | GPIO_MODER_MODE14_0 | GPIO_MODER_MODE0_0);
     while(1){
@@ -104,6 +105,7 @@ void SystemInit()
     const uint32_t RB_RCC_C1_APB3LPENR  = 0x00000000;
     const uint32_t RB_RCC_C1_APB4LPENR  = 0x00000000;
 #endif
+    SYSCFG->UR1 |= SYSCFG_UR1_BCM4;
     main();
 }
 
