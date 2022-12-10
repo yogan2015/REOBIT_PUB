@@ -1,4 +1,4 @@
-PNAME 	= nucleo-H743
+PNAME 	= nucleo-H745-H7
 PDIR	= ${CURDIR}/..#./projects/${имя проекта}
 BDIR    = ${CURDIR}
 prefix	= C:/arm-none-eabi/bin
@@ -12,13 +12,16 @@ GDB		= ${prefix}/arm-none-eabi-gdb
 
 #===( INCLUDE )===
 INC 	= -I${PDIR}/inc
+INC    += -I${PDIR}/../../cmn/CMSIS
+INC    += -I${PDIR}/../../cmn/core
+INC    += -I${PDIR}/../../cmn/target/stm32f74x
 
 #===( SOURCES )===
 #SRC 	= 
 #SRC   +=
 
 #===( LIBS )===
-ADDLIB	= -L${PDIR}/lib
+ADDLIB	= -L${PDIR}/../../cmn/stdlib
 ADDLIB += -lc -lm -lgcc
 
 #===( DEFINE )===

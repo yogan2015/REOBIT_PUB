@@ -1,0 +1,1 @@
+добавить в PATH путь к mingw32-make.exe
