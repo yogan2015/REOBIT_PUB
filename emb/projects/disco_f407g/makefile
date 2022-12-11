@@ -1,4 +1,4 @@
-PNAME 	= baza_f103
+PNAME 	= disco_f407g
 PDIR	= ${CURDIR}/..#./projects/${имя проекта}
 BDIR    = ${CURDIR}
 prefix	= C:/arm-none-eabi/bin
@@ -12,15 +12,16 @@ GDB		= ${prefix}/arm-none-eabi-gdb
 
 #===( INCLUDE )===
 INC 	= -I${PDIR}/inc
-INC    += -I${PDIR}/../../cmn/target/stm32f103/CMSIS/core
-INC    += -I${PDIR}/../../cmn/target/stm32f103/CMSIS/device
+INC    += -I${PDIR}/../../target
+INC    += -I${PDIR}/../../cmsis
+INC    += -I${PDIR}/../../core
 
 #===( SOURCES )===
 #SRC 	= 
 #SRC   +=
 
 #===( LIBS )===
-ADDLIB	= -L${PDIR}/../../cmn/stdlib
+ADDLIB	= -L${PDIR}/lib
 ADDLIB += -lc -lm -lgcc
 
 #===( DEFINE )===
