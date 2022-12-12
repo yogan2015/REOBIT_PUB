@@ -12,13 +12,16 @@ GDB		= ${prefix}/arm-none-eabi-gdb
 
 #===( INCLUDE )===
 INC 	= -I${PDIR}/inc
+INC    += -I${PDIR}/../../cmn/core
+INC    += -I${PDIR}/../../cmn/target
+INC    += -I${PDIR}/../../cmn/cmsis
 
 #===( SOURCES )===
 #SRC 	= 
 #SRC   +=
 
 #===( LIBS )===
-ADDLIB	= -L${PDIR}/lib
+ADDLIB	= -L${PDIR}/../../cmn/stdlib
 ADDLIB += -lc -lm -lgcc
 
 #===( DEFINE )===

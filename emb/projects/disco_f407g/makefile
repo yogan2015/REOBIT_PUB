@@ -12,16 +12,16 @@ GDB		= ${prefix}/arm-none-eabi-gdb
 
 #===( INCLUDE )===
 INC 	= -I${PDIR}/inc
-INC    += -I${PDIR}/../../target
-INC    += -I${PDIR}/../../cmsis
-INC    += -I${PDIR}/../../core
+INC    += -I${PDIR}/../../cmn/core
+INC    += -I${PDIR}/../../cmn/target
+INC    += -I${PDIR}/../../cmn/cmsis
 
 #===( SOURCES )===
 #SRC 	= 
 #SRC   +=
 
 #===( LIBS )===
-ADDLIB	= -L${PDIR}/lib
+ADDLIB	= -L${PDIR}/../../cmn/stdlib
 ADDLIB += -lc -lm -lgcc
 
 #===( DEFINE )===
@@ -31,8 +31,8 @@ DEF    += -DRELPATH
 #DEF    += -DSTM32F10X_MD
 
 #===( FLAGS )===
-CFLAGS	= -mthumb -mcpu=cortex-m7 -g -O0 ${DEF} ${INC}
-AFLAGS	= -mthumb -mcpu=cortex-m7 -g
+CFLAGS	= -mthumb -mcpu=cortex-m4 -g -O0 ${DEF} ${INC}
+AFLAGS	= -mthumb -mcpu=cortex-m4 -g
 LDFLAGS = -T${PDIR}/script.ld --specs=nosys.specs ${ADDLIB}
 
 %.o:	${PDIR}/%.c

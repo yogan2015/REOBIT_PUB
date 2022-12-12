@@ -18,7 +18,8 @@
         "sdl.h": "c",
         "sdl_main.h": "c",
         "close_code.h": "c",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "stm32f4xx.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.dimInactiveRegions": false

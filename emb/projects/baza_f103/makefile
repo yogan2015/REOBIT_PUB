@@ -12,8 +12,9 @@ GDB		= ${prefix}/arm-none-eabi-gdb
 
 #===( INCLUDE )===
 INC 	= -I${PDIR}/inc
-INC    += -I${PDIR}/../../cmn/target/stm32f103/CMSIS/core
-INC    += -I${PDIR}/../../cmn/target/stm32f103/CMSIS/device
+INC    += -I${PDIR}/../../cmn/core
+INC    += -I${PDIR}/../../cmn/target
+INC    += -I${PDIR}/../../cmn/cmsis
 
 #===( SOURCES )===
 #SRC 	= 
