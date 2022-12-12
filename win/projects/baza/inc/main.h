@@ -2,10 +2,10 @@
 
 #ifdef RELPATH
     #include "rbutil.h"
-    #include "SDL.h"
+//    #include "SDL.h"
 #else
     #include "../../../common/qol/inc/rbutil.h"
-    #include "../../../common/SDL2/include/SDL2/SDL.h"
+//    #include "../../../common/SDL2/include/SDL2/SDL.h"
 #endif
 
 #include <time.h>

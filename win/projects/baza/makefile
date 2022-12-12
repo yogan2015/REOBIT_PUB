@@ -15,14 +15,14 @@ AR      = ${prefix}/ar
 # ======================================
 INC	= -I${PDIR}/inc/
 INC += -I${PDIR}/../../common/qol/inc/
-INC += -I${PDIR}/../../common/SDL2/include/SDL2/
+#INC += -I${PDIR}/../../common/SDL2/include/SDL2/
 
 # ======================================
 #ADDSRC  =	general.o
 #ADDSRC += 
 
 # ======================================
-ADDLIBS = -L${PDIR}/lib -l${PNAME} -lSDL2 -lSDL2main
+ADDLIBS = -L${PDIR}/lib -l${PNAME}# -lSDL2 -lSDL2main
 #ADDLIBS+= lib
 
 # ======================================
