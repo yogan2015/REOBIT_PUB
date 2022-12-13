@@ -28,7 +28,7 @@ ADDLIB += -lc -lm -lgcc
 DEF 	= -DDEBUG
 DEF    += -DRELPATH
 #DEF    += -D__GNUC__
-#DEF    += -DSTM32F10X_MD
+DEF    += -DSTM32F74
 
 #===( FLAGS )===
 CFLAGS	= -mthumb -mcpu=cortex-m7 -g -O0 ${DEF} ${INC}
@@ -48,7 +48,7 @@ LDFLAGS = -T${PDIR}/script.ld --specs=nosys.specs ${ADDLIB}
 	@echo compiling $@ from ASM
 	$(CC) -c -o $@ $< $(AFLAGS)
 
-all:	main.o startup.o
+all:	main.o startup.o rb_USART.o
 	${LD} ${LDFLAGS} -g -o ${PNAME}.elf $^
 	${OCOP} -O binary ${PNAME}.elf ${PNAME}.bin
 	${SZ} ${PNAME}.elf

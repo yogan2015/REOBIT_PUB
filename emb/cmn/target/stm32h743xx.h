@@ -29,6 +29,11 @@
 /** @addtogroup stm32h743xx
   * @{
   */
+ 
+ //для настройки области видимости
+ #ifndef RELPATH
+  #include "../core/core_cm7.h"
+ #endif
 
 #ifndef STM32H743xx_H
 #define STM32H743xx_H

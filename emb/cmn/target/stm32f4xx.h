@@ -35,6 +35,11 @@
   * @{
   */
     
+ //для настройки области видимости
+#ifndef RELPATH
+  #include "../core/core_cm4.h"
+#endif
+
 #ifndef __STM32F4xx_H
 #define __STM32F4xx_H
 
