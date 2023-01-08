@@ -53,7 +53,8 @@
 #ifdef __cplusplus
  extern "C" {
 #endif 
-  
+
+
 /** @addtogroup Library_configuration_section
   * @{
   */
@@ -475,21 +476,12 @@ typedef enum IRQn
   * @}
   */
 
-#ifdef RELPATH  
-  #include "core_cm3.h"
-  #include "system_stm32f10x.h"
-#else
-  #include "../core/core_cm3.h"
-  #include "../core/system_stm32f10x.h"
-#endif
-
-  #include <stdint.h>
-
 /** @addtogroup Exported_types
   * @{
   */  
 
 /*!< STM32F10x Standard Peripheral Library old types (maintained for legacy purpose) */
+
 typedef int32_t  s32;
 typedef int16_t s16;
 typedef int8_t  s8;
@@ -506,7 +498,7 @@ typedef __I int32_t vsc32;  /*!< Read Only */
 typedef __I int16_t vsc16;  /*!< Read Only */
 typedef __I int8_t vsc8;   /*!< Read Only */
 
-typedef uint32_t  u32;
+typedef uint32_t u32;
 typedef uint16_t u16;
 typedef uint8_t  u8;
 

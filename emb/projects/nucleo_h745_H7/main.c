@@ -9,7 +9,7 @@
 void main()
 {
     int a = 1;
-    
+
     RCC->AHB4ENR |= RCC_AHB4ENR_GPIOBEN;
     GPIOB->MODER &= (~(GPIO_MODER_MODE14_Msk | GPIO_MODER_MODE0_Msk) | GPIO_MODER_MODE14_0 | GPIO_MODER_MODE0_0);
     while(1){

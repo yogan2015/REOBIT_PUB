@@ -1,0 +1,1 @@
+arm-none-eabi-gcc ..\main2.c -I ..\..\..\cmn\target -I ..\..\..\cmn\core  -I ..\..\..\cmn\cmsis
