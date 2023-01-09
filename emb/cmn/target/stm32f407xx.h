@@ -33,7 +33,7 @@
     
  //для настройки области видимости
  #ifndef RELPATH
-  #include "../core/core_cm4.h"
+ #include <stdint-gcc.h>
  #endif
 
 #ifndef __STM32F407xx_H

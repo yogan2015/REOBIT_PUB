@@ -32,7 +32,7 @@
 
  //для настройки области видимости
  #ifndef RELPATH
-  #include "../core/core_cm7.h"
+ #include <stdint-gcc.h>
  #endif
 
 #ifndef STM32H745xx_H

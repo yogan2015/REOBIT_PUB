@@ -3,7 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/emb/board",
+                "${workspaceFolder}/emb/cmn",
                 "${workspaceFolder}/win/common/*",
                 "C:/Users/ih/toolchain/",
                 "C:/Users/ih/toolchain/arm-none-eabi/include/c++/4.9.3/tr1/",

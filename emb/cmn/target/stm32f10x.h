@@ -46,7 +46,12 @@
 /** @addtogroup stm32f10x
   * @{
   */
-    
+
+ //для настройки области видимости
+ #ifndef RELPATH
+ #include <stdint-gcc.h>
+ #endif    
+
 #ifndef __STM32F10x_H
 #define __STM32F10x_H
 
