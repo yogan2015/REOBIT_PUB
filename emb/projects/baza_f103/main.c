@@ -9,31 +9,34 @@
 void SystemInit()   
 {
     //  переключение на HSE (на блюпилл - 8 МГц)
-        RCC->CR |=  RCC_CR_HSEON;
-        while (!(RCC->CR & RCC_CR_HSERDY))
+        //RCC->CR |=  RCC_CR_HSEON;
+        //RCC->CR &= ~(RCC_CR_HSION | RCC_CR_CSSON | RCC_CR_PLLON | RCC_CR_HSEBYP);
+
+        //while (!(RCC->CR & RCC_CR_HSERDY));
+        //RCC->CR &= ~RCC_CR_HSION;
 
     //  загрузка конфигурации проекта   (раскомментить нужное)
         //RCC->CFGR;        Clock configuration r.
         RCC->CFGR |= (  
-                        RCC_CFGR_HPRE_DIV1    |
-                        RCC_CFGR_PPRE1_DIV2   |
-                        RCC_CFGR_PPRE2_DIV1   |
-                        RCC_CFGR_ADCPRE_DIV6  |
-                        RCC_CFGR_PLLSRC_HSE   |
-                        RCC_CFGR_PLLXTPRE_HSE |                    
-                        RCC_CFGR_PLLMULL9     |
-                        RCC_CFGR_USBPRE       |
+                        RCC_CFGR_HPRE_DIV1         |
+                        RCC_CFGR_PPRE1_DIV2        |
+                        RCC_CFGR_PPRE2_DIV1        |
+                        RCC_CFGR_ADCPRE_DIV6       |
+                        RCC_CFGR_PLLSRC_HSI_Div2   |
+                        RCC_CFGR_PLLXTPRE_HSE      |                    
+                        RCC_CFGR_PLLMULL15         |
+                        //RCC_CFGR_USBPRE          |
                         RCC_CFGR_MCO_NOCLOCK
                         );
 
         //RCC->CIR;         Clock interrupt r.
-        RCC->CIR =      0;
+        //RCC->CIR =      0;
 
         //RCC->APB1RSTR;    APB1 Peripherial reset r.
-        RCC->APB1RSTR = 0;
+        //RCC->APB1RSTR = 0;
 
         //RCC->APB2RSTR;    APB2 Peripherial reset r.
-        RCC->APB2RSTR = 0;
+        //RCC->APB2RSTR = 0;
 
         //RCC->AHBENR;      AHB Peripherial clock enable r.
         //RCC->AHBENR =  (RCC_AHBENR_DMA1EN   |
@@ -63,7 +66,7 @@ void SystemInit()
                           //RCC_APB2ENR_AFIOEN  |
                           //RCC_APB2ENR_IOPAEN  |
                           //RCC_APB2ENR_IOPBEN  |
-                          //RCC_APB2ENR_IOPCEN  |
+                          RCC_APB2ENR_IOPCEN  |
                           //RCC_APB2ENR_IOPDEN  |
                           //RCC_APB2ENR_IOPEEN  |
                           //RCC_APB2ENR_ADC1EN  |
@@ -75,25 +78,35 @@ void SystemInit()
                         0);
 
         //RCC->BDCR;        Backup domain control r.
-        RCC->BDCR   = 0;
+        //RCC->BDCR   = 0;
     
     //  включение pll
         RCC->CR   |= RCC_CR_PLLON;
-        while (!(RCC->CR & RCC_CR_PLLRDY))
+        while (!(RCC->CR & RCC_CR_PLLRDY));
 
+        //RCC->CR &= ~RCC_CR_HSION;
     //  включение тактирования от pll
         RCC->CFGR &= ~RCC_CFGR_SW;
         RCC->CFGR |= RCC_CFGR_SW_PLL;
-        while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL)
+        while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);
+
+    //  конфигурация GPIO
+        GPIOC->CRH |= (GPIO_CRH_MODE13_0 | GPIO_CRH_CNF13_0);
+
 
     main();
 }
+
+uint32_t i=1000;
 
 void main()
 {
     while (1)
     {
-        ;
+        i = ((i>750)?(i=0):(i+1));
+        if (i==0)   GPIOC->BSRR |= GPIO_BSRR_BS13;
+        if (i==375) GPIOC->BSRR |= GPIO_BSRR_BR13;
     }
+    
     
 }
