@@ -43,4 +43,7 @@
 #endif
 
 void SystemInit(void);
+static inline void config_GPIO(void);
+static inline void config_TIM1(void);
+static inline void config_TIM1_2(void);
 void main(void);
