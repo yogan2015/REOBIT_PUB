@@ -8,13 +8,20 @@
 
 void SystemInit()   
 {
+
+    /* Enable Prefetch Buffer */
+    FLASH->ACR |= FLASH_ACR_PRFTBE;
+
+    /* Flash 0 wait state */
+    FLASH->ACR &= (uint32_t)((uint32_t)~FLASH_ACR_LATENCY);
+    FLASH->ACR |= (uint32_t)FLASH_ACR_LATENCY_2;
+
+
     //  переключение на HSE (на блюпилл - 8 МГц)
-        //RCC->CR |=  RCC_CR_HSEON;
-        //RCC->CR &= ~(RCC_CR_HSION | RCC_CR_CSSON | RCC_CR_PLLON | RCC_CR_HSEBYP);
-
-        //while (!(RCC->CR & RCC_CR_HSERDY));
-        //RCC->CR &= ~RCC_CR_HSION;
-
+        RCC->CR |=  RCC_CR_HSEON;
+        RCC->CR &= ~(RCC_CR_HSION | RCC_CR_CSSON | RCC_CR_PLLON | RCC_CR_HSEBYP);
+        while (!(RCC->CR & RCC_CR_HSERDY));
+        
     //  загрузка конфигурации проекта   (раскомментить нужное)
         //RCC->CFGR;        Clock configuration r.
         RCC->CFGR |= (  
@@ -22,12 +29,21 @@ void SystemInit()
                         RCC_CFGR_PPRE1_DIV2        |
                         RCC_CFGR_PPRE2_DIV1        |
                         RCC_CFGR_ADCPRE_DIV6       |
-                        RCC_CFGR_PLLSRC_HSI_Div2   |
+                        RCC_CFGR_PLLSRC_HSE        |
                         RCC_CFGR_PLLXTPRE_HSE      |                    
-                        RCC_CFGR_PLLMULL15         |
-                        //RCC_CFGR_USBPRE          |
-                        RCC_CFGR_MCO_NOCLOCK
+                        RCC_CFGR_PLLMULL9          |
+                        RCC_CFGR_USBPRE            
+                        //RCC_CFGR_MCO_NOCLOCK
                         );
+
+    //  включение pll
+        RCC->CR   |= RCC_CR_PLLON;
+        while (!(RCC->CR & RCC_CR_PLLRDY));
+
+        //RCC->CR &= ~RCC_CR_HSION;
+    //  включение тактирования от pll
+        RCC->CFGR |= RCC_CFGR_SW_PLL;
+        while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);
 
         //RCC->CIR;         Clock interrupt r.
         //RCC->CIR =      0;
@@ -79,16 +95,6 @@ void SystemInit()
 
         //RCC->BDCR;        Backup domain control r.
         //RCC->BDCR   = 0;
-    
-    //  включение pll
-        RCC->CR   |= RCC_CR_PLLON;
-        while (!(RCC->CR & RCC_CR_PLLRDY));
-
-        //RCC->CR &= ~RCC_CR_HSION;
-    //  включение тактирования от pll
-        RCC->CFGR &= ~RCC_CFGR_SW;
-        RCC->CFGR |= RCC_CFGR_SW_PLL;
-        while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);
 
     config_GPIO();
     config_TIM1_2();
@@ -99,8 +105,12 @@ static inline void config_GPIO()
 {
     //  конфигурация GPIO
         GPIOC->CRH |= (GPIO_CRH_MODE13_0| GPIO_CRH_CNF13_0);
-        GPIOA->CRH |= (GPIO_CRH_MODE8_0 | GPIO_CRH_MODE9_0 | GPIO_CRH_MODE10_0);
-        GPIOB->CRH |= (GPIO_CRH_MODE13_0| GPIO_CRH_MODE14_0| GPIO_CRH_MODE15_0);
+        GPIOA->CRH &= ~(GPIO_CRH_CNF8 | GPIO_CRH_CNF9 | GPIO_CRH_CNF10);
+        GPIOB->CRH &= ~(GPIO_CRH_CNF13| GPIO_CRH_CNF14| GPIO_CRH_CNF15);
+        GPIOA->CRH |= (GPIO_CRH_MODE8_1| GPIO_CRH_MODE9_1| GPIO_CRH_MODE10_1|
+                       GPIO_CRH_CNF8_1  | GPIO_CRH_CNF9_1  | GPIO_CRH_CNF10_1);
+        GPIOB->CRH |= (GPIO_CRH_MODE13_1| GPIO_CRH_MODE14_1| GPIO_CRH_MODE15_1|
+                       GPIO_CRH_CNF13_1 | GPIO_CRH_CNF14_1 | GPIO_CRH_CNF15_1);
 }
 
 static inline void config_TIM1()
@@ -243,24 +253,34 @@ static inline void config_TIM1()
 
 static inline void config_TIM1_2()
 {
-    TIM1->PSC = 0xFFF;
-    TIM1->ARR = 0x20;
-    TIM1->CR1 |= TIM_CR1_CEN | TIM_CR1_CMS_0 | TIM_CR1_ARPE;
-    TIM1->CCMR1 |= TIM_CCMR1_OC1PE | TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2
-                |  TIM_CCMR1_OC2PE | TIM_CCMR1_OC2M_1 | TIM_CCMR1_OC2M_2;
-    TIM1->CCR1 = 0x10;
-    TIM1->CCR2 = 0x10;
+    //NVIC_EnableIRQ(TIM1_CC_IRQn);
+    TIM1->PSC = 0;
+    TIM1->ARR = 72-1;    
+    TIM1->CCR1 = 36;    TIM1->CCR2 = 36;    TIM1->CCR3 = 36;
+    TIM1->CR1 |= TIM_CR1_CMS_0 | TIM_CR1_ARPE;
+    //TIM1->CCR2 = 0x1000;
+    TIM1->CCER |= TIM_CCER_CC1E | TIM_CCER_CC2E | TIM_CCER_CC3E
+                | TIM_CCER_CC1NE| TIM_CCER_CC2NE| TIM_CCER_CC3NE 
+                | TIM_CCER_CC1P | TIM_CCER_CC2P | TIM_CCER_CC3P;
+    TIM1->BDTR |= TIM_BDTR_MOE;    
+    TIM1->CCMR1 |= TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2
+                |  TIM_CCMR1_OC2M_1 | TIM_CCMR1_OC2M_2;
+    TIM1->CCMR2 |= TIM_CCMR2_OC3M_1 | TIM_CCMR2_OC3M_2;
+    //TIM1->CR1  |= TIM_CR1_CEN;
+    TIM1->DIER |= TIM_DIER_CC1IE;
+    TIM1->CR1  |= TIM_CR1_CEN;   
 }
 extern void TIM1_UP_IRQHandler()
 {
     //NVIC->ICPR |= NVIC_ClearPendingIRQ(TIM1_UP_IRQn);
+    TIM1->SR &= ~TIM_SR_UIF;
+    GPIOC->ODR ^= GPIO_ODR_ODR13;
 }
 
 void main()
 {
     while (1)
     {
-        if(TIM1->CNT == 0)    GPIOC->BSRR |= GPIO_BSRR_BS13;
-        if(TIM1->CNT == 0x10) GPIOC->BSRR |= GPIO_BSRR_BR13;
+        ;
     }   
 }

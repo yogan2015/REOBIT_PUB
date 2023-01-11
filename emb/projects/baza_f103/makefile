@@ -2,6 +2,7 @@ PNAME 	= baza_f103
 PDIR	= ${CURDIR}/..#./projects/${имя проекта}
 BDIR    = ${CURDIR}
 prefix	= C:/arm-none-eabi/bin
+minsetup =  -nostartfiles -nostdlib -nodefaultlibs -nolibc 
 
 CC		= ${prefix}/arm-none-eabi-gcc
 LD		= ${prefix}/arm-none-eabi-gcc
@@ -28,12 +29,12 @@ ADDLIB += -lc -lm -lgcc
 DEF 	= -DDEBUG
 DEF    += -DRELPATH
 #DEF    += -D__GNUC__
-#DEF    += -DSTM32F10X_MD
+DEF    += -DSTM32F10X_MD
 
 #===( FLAGS )===
-CFLAGS	= -mthumb -mcpu=cortex-m7 -g -O0 ${DEF} ${INC}
-AFLAGS	= -mthumb -mcpu=cortex-m7 -g
-LDFLAGS = -T${PDIR}/script.ld --specs=nosys.specs ${ADDLIB}
+CFLAGS	= -mthumb -mcpu=cortex-m3 -g -O3 ${minsetup} ${DEF} ${INC}
+AFLAGS	= -mthumb -mcpu=cortex-m3 -g ${minsetup}
+LDFLAGS = -T${PDIR}/script.ld --specs=nosys.specs ${minsetup} ${ADDLIB}
 
 %.o:	${PDIR}/%.c
 	@echo ===
@@ -41,6 +42,8 @@ LDFLAGS = -T${PDIR}/script.ld --specs=nosys.specs ${ADDLIB}
 	${CC} -c -o $@ $< ${CFLAGS}
 
 %.o:	${PDIR}/src/%.c
+	@echo ===
+	@echo compiling $@ from C
 	${CC} -c -o $@ $< ${CFLAGS}
 
 %.o:	${PDIR}/%.s
@@ -48,7 +51,9 @@ LDFLAGS = -T${PDIR}/script.ld --specs=nosys.specs ${ADDLIB}
 	@echo compiling $@ from ASM
 	$(CC) -c -o $@ $< $(AFLAGS)
 
-all:	main.o startup.o
+all:	main.o startup.o	
+	@echo ===
+	@echo linking ${PNAME}.elf from $^.o
 	${LD} ${LDFLAGS} -g -o ${PNAME}.elf $^
 	${OCOP} -O binary ${PNAME}.elf ${PNAME}.bin
 	${SZ} ${PNAME}.elf
