@@ -26,7 +26,7 @@ ADDLIB	= -L${PDIR}/../../cmn/stdlib
 ADDLIB += -lc -lm -lgcc
 
 #===( DEFINE )===
-DEF 	= -DDEBUG
+DEF 	= #-DDEBUG
 DEF    += -DRELPATH
 #DEF    += -D__GNUC__
 DEF    += -DSTM32F10X_MD

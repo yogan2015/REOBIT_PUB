@@ -2,10 +2,12 @@
 
 static inline void config_TIM1()
 {
+        TIM1->PSC   =   71-1;
+        TIM1->ARR   =   1024-1;
     //  Âêë. TIM1
         //  TIM1 Control r. 1
             TIM1->CR1 |= (
-                            TIM_CR1_CEN     |
+            //              TIM_CR1_CEN     |
             //              TIM_CR1_UDIS    |
             //              TIM_CR1_URS     |
             //              TIM_CR1_OPM     |
@@ -14,6 +16,7 @@ static inline void config_TIM1()
                             TIM_CR1_ARPE    |
             //              TIM_CR1_CKD     |
                             0);
+
         //  TIM1 Control r. 2
             TIM1->CCR2 |= (
             //              TIM_CR2_CCPC    |
@@ -53,7 +56,7 @@ static inline void config_TIM1()
 
         //  TIM1 event generation r.
             TIM1->EGR |= (
-                            TIM_EGR_UG      |
+            //              TIM_EGR_UG      |
             //              TIM_EGR_CC1G    |
             //              TIM_EGR_CC2G    |
             //              TIM_EGR_CC3G    |
@@ -61,17 +64,36 @@ static inline void config_TIM1()
             //              TIM_EGR_TG      |
             //               TIM_EGR_BG      |
                             0);
+        //  TIM1 capture/compare enable r.
+
+            TIM1->CCER |= (
+                            TIM_CCER_CC1E   |
+                            TIM_CCER_CC1P   |
+                            TIM_CCER_CC1NE  |
+            //              TIM_CCER_CC1NP  |
+                            TIM_CCER_CC2E   |
+                            TIM_CCER_CC2P   |
+                            TIM_CCER_CC2NE  |
+            //              TIM_CCER_CC2NP  |
+                            TIM_CCER_CC3E   |
+                            TIM_CCER_CC3P   |
+                            TIM_CCER_CC3NE  |
+            //              TIM_CCER_CC3NP  |
+            //              TIM_CCER_CC4E   |
+            //              TIM_CCER_CC4P   |
+            //              TIM_CCER_CC4NP  |
+                            0);
         //  TIM1 capture/compare mode r. 1
             TIM1->CCMR1 |= (
             //              TIM_CCMR1_CC1S_0    |   TIM_CCMR1_CC1S_1 |
             //              TIM_CCMR1_OC1FE     |
-                            TIM_CCMR1_OC1PE     |
-                            TIM_CCMR1_OC1M_0    |   TIM_CCMR1_OC1M_1 |  TIM_CCMR1_OC1M_2    |
+            //              TIM_CCMR1_OC1PE     |
+                            TIM_CCMR1_OC1M_1    |  TIM_CCMR1_OC1M_2    |
             //              TIM_CCMR1_OC1CE     |
             //              TIM_CCMR1_CC2S_0    |   TIM_CCMR1_CC2S_1 |
             //              TIM_CCMR1_OC2FE     |
-                            TIM_CCMR1_OC2PE     |
-                            TIM_CCMR1_OC2M_0    |   TIM_CCMR1_OC2M_1 |  TIM_CCMR1_OC2M_2    |
+            //              TIM_CCMR1_OC2PE     |
+                            TIM_CCMR1_OC2M_1    |  TIM_CCMR1_OC2M_2    |
             //              TIM_CCMR1_OC2CE     |
                             0);
 
@@ -79,33 +101,14 @@ static inline void config_TIM1()
             TIM1->CCMR2 |= (
             //              TIM_CCMR2_CC3S_0    |   TIM_CCMR2_CC3S_1 |
             //              TIM_CCMR2_OC3FE     |
-                            TIM_CCMR2_OC3PE     |
-                            TIM_CCMR2_OC3M_0    |   TIM_CCMR2_OC3M_1 |  TIM_CCMR2_OC3M_2    |
+            //              TIM_CCMR2_OC3PE     |
+                            TIM_CCMR2_OC3M_1    |  TIM_CCMR2_OC3M_2    |
             //              TIM_CCMR2_OC3CE     |
             //              TIM_CCMR2_CC4S_0    |   TIM_CCMR2_CC4S_1 |
             //              TIM_CCMR2_OC4FE     |
             //              TIM_CCMR2_OC4PE     |
             //              TIM_CCMR2_OC4M_0    |   TIM_CCMR2_OC4M_1    TIM_CCMR2_OC4M_2    |
             //              TIM_CCMR2_OC4CE     |
-                            0);
-
-        //  TIM1 capture/compare enable r.
-            TIM1->CCER |= (
-            //              TIM_CCER_CC1E   |
-            //              TIM_CCER_CC1P   |
-            //              TIM_CCER_CC1NE  |
-            //              TIM_CCER_CC1NP  |
-            //              TIM_CCER_CC2E   |
-            //              TIM_CCER_CC2P   |
-            //              TIM_CCER_CC2NE  |
-            //              TIM_CCER_CC2NP  |
-            //              TIM_CCER_CC3E   |
-            //              TIM_CCER_CC3P   |
-            //              TIM_CCER_CC3NE  |
-            //              TIM_CCER_CC3NP  |
-            //              TIM_CCER_CC4E   |
-            //              TIM_CCER_CC4P   |
-            //              TIM_CCER_CC4NP  |
                             0);
 
         //  TIM1 break and dead-time r.
@@ -117,7 +120,7 @@ static inline void config_TIM1()
             //              TIM_BDTR_BKE    |
             //              TIM_BDTR_BKP    |
             //              TIM_BDTR_AOE    |
-            //              TIM_BDTR_MOE    |
+                            TIM_BDTR_MOE    |
                             0);
         
         //  TIM1 DMA control r.
@@ -130,10 +133,10 @@ static inline void config_TIM1()
             TIM1->DMAR |= (
             //              TIM_DMAR_DMAB   |
                             0);
-        
-        TIM1->PSC   =   1000;
-        TIM1->ARR   =   1000;
-        TIM1->CCR1  =   500;
-        TIM1->CCR2  =   500;
-        TIM1->CCR3  =   500;
+
+        // Start
+            TIM1->CR1 |= TIM_CR1_CEN;
+            TIM1->CCR1 = 511;
+            TIM1->CCR2 = 511;
+            TIM1->CCR3 = 511;
 }
