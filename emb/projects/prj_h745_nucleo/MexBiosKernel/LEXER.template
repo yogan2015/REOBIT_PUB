@@ -1,0 +1,17 @@
+(* Main program *)
+(* Supported types: INT, FLOAT, Q1-Q30 *)
+PROGRAM main
+  (* Input variables *)
+  INPUT_VAR
+  In : DEFAULT_TYPE;
+  END_VAR
+  (* Output variables *)
+  OUTPUT_VAR
+  Out : DEFAULT_TYPE;
+  END_VAR
+  (* Local variables *)
+  LOCAL_VAR
+  END_VAR
+  (* Body text *) 
+  Out := In;
+END_PROGRAM

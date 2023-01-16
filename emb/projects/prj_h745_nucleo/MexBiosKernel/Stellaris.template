@@ -1,0 +1,40 @@
+
+--retain=g_pfnVectors
+--heap_size=0
+--stack_size=128
+
+/* System memory map */
+MEMORY
+{
+  /* Application stored in and executes from internal flash */
+  MBSP0 (RX)  : origin = ##MBS_PROG_ADDR##, length = ##MBS_PROG_SIZE##
+  MBSP1 (RX)  : origin = ##MBS_CFG_ADDR##, length = ##MBS_CFG_SIZE##
+  FLASH (RX)  : origin = ##SPJ_PROG_ADDR##, length = ##SPJ_PROG_SIZE##
+  
+  /* Application uses internal RAM for data */
+  MBSD0 (RWX) : origin = ##MBS_DATA_ADDR##, length = ##MBS_DATA_SIZE##
+  SRAM (RWX)  : origin = ##SPJ_DATA_ADDR##, length = ##SPJ_DATA_SIZE##
+  VECS(RWX)   : origin = 0x20000000, length = ##VECS_SIZE##
+ }
+ 
+ /* Section allocation in memory */
+ SECTIONS
+ {
+  MBS_CODE    :   > MBSP0
+  MBS_CFG     :   > MBSP1
+  .text       :   > FLASH
+  .const      :   > FLASH
+  .cinit      :   > FLASH
+  .pinit      :   > FLASH
+  .init_array :   > FLASH
+  
+  MBS_DATA    :   > MBSD0
+  .vtable     :   > VECS
+  .data       :   > SRAM
+  .bss        :   > SRAM
+  .sysmem     :   > SRAM
+  .stack      :   > SRAM
+ }
+
+__STACK_TOP = __stack + 128;
+

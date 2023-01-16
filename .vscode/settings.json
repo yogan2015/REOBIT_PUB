@@ -30,7 +30,9 @@
         "stm32f10x_conf.h": "c",
         "stdint.h": "c",
         "stdint-gcc.h": "c",
-        "rb_data.h": "c"
+        "rb_data.h": "c",
+        "header.h": "c",
+        "mbs_importlib.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.dimInactiveRegions": false
