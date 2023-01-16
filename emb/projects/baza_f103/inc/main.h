@@ -48,4 +48,7 @@ static inline void config_GPIO  (void);
 static inline void config_TIM1  (void);
 static inline void config_TIM4  (void);
 static inline void config_USART3(void);
+
+static inline void config_NVIC  (void);
+
 void main(void);

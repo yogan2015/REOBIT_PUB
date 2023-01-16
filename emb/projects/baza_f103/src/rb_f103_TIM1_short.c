@@ -3,9 +3,9 @@
 static inline void config_TIM1()
 {
     //NVIC_EnableIRQ(TIM1_CC_IRQn);
-    TIM1->PSC = 0;
-    TIM1->ARR = 72-1;    
-    TIM1->CCR1 = 36;    TIM1->CCR2 = 36;    TIM1->CCR3 = 36;
+    TIM1->PSC = 71-1; // 1,024 mhz - 71-1
+    TIM1->ARR = 1024;   
+    TIM1->CCR1 = 512;    TIM1->CCR2 = 512;    TIM1->CCR3 = 512;
     TIM1->CR1 |= TIM_CR1_CMS_0 | TIM_CR1_ARPE;
     //TIM1->CCR2 = 0x1000;
     TIM1->CCER |= TIM_CCER_CC1E | TIM_CCER_CC2E | TIM_CCER_CC3E
