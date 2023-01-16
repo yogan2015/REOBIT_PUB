@@ -76,20 +76,20 @@ Core/Src/usart.c \
 ../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_spi.c \
 ../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usart.c \
 ../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_utils.c \
-../../boards/h745_nucleo/src_CM4/mbs_main_CM4.c \
-../../boards/h745_nucleo/src_CM4/board_h745_nucleo_CM4.c \
-../../mbs_drivers_h7/errno.c \
-../../mbs_drivers_h7/mbs_flash.c \
-../../mbs_drivers_h7/mbs_gpio.c \
-../../mbs_drivers_h7/mbs_sci.c \
-../../mbs_drivers_h7/mbs_spi.c \
-../../mbs_drivers_h7/mbs_adc.c \
-../../mbs_drivers_h7/mbs_tim.c \
-../../mbs_drivers_h7/mbs_can.c \
-../../mbs_drivers_h7/m95x.c \
-../../mbs_drivers_h7/mbs_delay.c \
-../../mbs_drivers_h7/pfunc.c \
-../../mbs_drivers_h7/reg_access.c \
+../boards/h745_nucleo/src_CM4/mbs_main_CM4.c \
+../boards/h745_nucleo/src_CM4/board_h745_nucleo_CM4.c \
+../mbs_drivers_h7/errno.c \
+../mbs_drivers_h7/mbs_flash.c \
+../mbs_drivers_h7/mbs_gpio.c \
+../mbs_drivers_h7/mbs_sci.c \
+../mbs_drivers_h7/mbs_spi.c \
+../mbs_drivers_h7/mbs_adc.c \
+../mbs_drivers_h7/mbs_tim.c \
+../mbs_drivers_h7/mbs_can.c \
+../mbs_drivers_h7/m95x.c \
+../mbs_drivers_h7/mbs_delay.c \
+../mbs_drivers_h7/pfunc.c \
+../mbs_drivers_h7/reg_access.c \
 
 
 
@@ -115,11 +115,14 @@ CC = $(GCC_PATH)/$(PREFIX)gcc
 AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
 CP = $(GCC_PATH)/$(PREFIX)objcopy
 SZ = $(GCC_PATH)/$(PREFIX)size
+ODUM=$(GCC_PATH)/$(PREFIX)objdump -D
+
 else
 CC = $(PREFIX)gcc
 AS = $(PREFIX)gcc -x assembler-with-cpp
 CP = $(PREFIX)objcopy
 SZ = $(PREFIX)size
+ODUM=$(PREFIX)objdump -D
 endif
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
@@ -179,10 +182,11 @@ C_INCLUDES = \
 -I../Drivers/CMSIS/Include \
 -I../Drivers/STM32H7xx_HAL_Driver/Inc \
 -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy \
--I../../mbs_drivers_h7 \
+-I../mbs_drivers_h7 \
+-I.. \
 -I../.. \
--I../../boards/h745_nucleo/inc \
--I../../MexBiosKernel \
+-I../boards/h745_nucleo/inc \
+-I../MexBiosKernel \
 
 
 
@@ -227,10 +231,10 @@ vpath %.s $(sort $(dir $(ASM_SOURCES)))
 
 #add libraries
 MB_LIBS=\
-../../MexBiosKernel/libSTM32H7XX.a \
-../../MexBiosKernel/libkernel_m4f.a \
-../../MexBiosKernel/IQmathLib-cm4f.a \
-../../MexBiosKernel/libmodbus_rtu_m4f.a \
+../MexBiosKernel/libSTM32H7XX.a \
+../MexBiosKernel/libkernel_m4f.a \
+../MexBiosKernel/IQmathLib-cm4f.a \
+../MexBiosKernel/libmodbus_rtu_m4f.a \
 
 
 
@@ -239,14 +243,15 @@ MB_LIBS=\
 
 
 $(BUILD_DIR)/%.o: %.c makefile.mak | $(BUILD_DIR) 
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	@$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
 $(BUILD_DIR)/%.o: %.s makefile.mak | $(BUILD_DIR)
-	$(AS) -c $(CFLAGS) $< -o $@
+	@$(AS) -c $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) makefile.mak
 	$(CC) $(OBJECTS) $(MB_LIBS) $(LDFLAGS) -o $@
 	$(SZ) $@
+	$(ODUM) $@ > $(TARGET)_disassembly.txt
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	$(HEX) $< $@
@@ -261,7 +266,9 @@ $(BUILD_DIR):
 # clean up
 #######################################
 clean:
-	-rm -fR $(BUILD_DIR)
+	@del $(BUILD_DIR)\*.o
+	@del $(BUILD_DIR)\*.lst
+	@del $(BUILD_DIR)\*.d
   
 #######################################
 # dependencies

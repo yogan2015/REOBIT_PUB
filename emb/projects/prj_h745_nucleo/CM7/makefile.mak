@@ -88,9 +88,6 @@ Core/Src/usart.c \
 ASM_SOURCES = \
 Core/Startup/startup_stm32h745iitx.s
 
-
-
-
 #######################################
 # binaries
 #######################################
@@ -103,11 +100,13 @@ CC = $(GCC_PATH)/$(PREFIX)gcc
 AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
 CP = $(GCC_PATH)/$(PREFIX)objcopy
 SZ = $(GCC_PATH)/$(PREFIX)size
+ODUM=$(GCC_PATH)/$(PREFIX)objdump -D
 else
 CC = $(PREFIX)gcc
 AS = $(PREFIX)gcc -x assembler-with-cpp
 CP = $(PREFIX)objcopy
 SZ = $(PREFIX)size
+ODUM=$(PREFIX)objdump -D
 endif
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
@@ -218,14 +217,17 @@ OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
 vpath %.s $(sort $(dir $(ASM_SOURCES)))
 
 $(BUILD_DIR)/%.o: %.c makefile.mak | $(BUILD_DIR)
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	@$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	@echo |
 
 $(BUILD_DIR)/%.o: %.s makefile.mak | $(BUILD_DIR)
-	$(AS) -c $(CFLAGS) $< -o $@
+	@$(AS) -c $(CFLAGS) $< -o $@
+	@echo |
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS)  makefile.mak
 	$(CC) $(OBJECTS) $(MB_LIBS) $(LDFLAGS) -o $@
 	$(SZ) $@
+	$(ODUM) $@ > $(TARGET)_disassembly.txt
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	$(HEX) $< $@
