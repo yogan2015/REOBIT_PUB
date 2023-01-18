@@ -39,8 +39,7 @@
 //    #include "../../../cmn/cmsis/cmsis_version.h"
 #endif
 
-#define rb_general_include
-#endif
+char tx_str[]="ass!\n";
 
 void SystemInit(void);
 static inline void config_RCC   (void);
@@ -53,3 +52,6 @@ void config_EXTI  (void);
 static inline void config_NVIC  (void);
 
 void main(void);
+
+#define rb_general_include
+#endif

@@ -48,10 +48,12 @@ static inline void config_RCC()
         //RCC->APB2RSTR = 0;
 
         //RCC->AHBENR;      AHB Peripherial clock enable r.
-        //RCC->AHBENR =  (RCC_AHBENR_DMA1EN   |
+        RCC->AHBENR =  (
+                          RCC_AHBENR_DMA1EN   |
         //                RCC_AHBENR_SRAMEN   |
         //                RCC_AHBENR_FLITFEN  |
-        //                RCC_AHBENR_CRCEN);
+        //                RCC_AHBENR_CRCEN
+                        0);
 
         //RCC->APB1ENR;     APB1 Peripherial clock enable r.
         RCC->APB1ENR  |= (
