@@ -1,6 +1,7 @@
 PNAME 	= MBS_K1921
 PDIR	= ${CURDIR}/..#./projects/${имя проекта}
 BDIR    = ${CURDIR}
+DDIR    = ${CURDIR}/../debug
 prefix	= C:/arm-none-eabi/bin
 
 CC		= ${prefix}/arm-none-eabi-gcc
@@ -9,6 +10,7 @@ OCOP	= ${prefix}/arm-none-eabi-objcopy
 SZ		= ${prefix}/arm-none-eabi-size
 ODUM	= ${prefix}/arm-none-eabi-objdump
 GDB		= ${prefix}/arm-none-eabi-gdb
+OCD		= C:/WORK/openocd/bin/openocd
 
 #===( INCLUDE )===
 INC 	= -I${PDIR}/inc
@@ -31,11 +33,11 @@ DEF    += -DRELPATH
 #===( FLAGS )===
 CFLAGS	= -mthumb -mcpu=cortex-m3 -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CFLAGS += -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections
-CFLAGS += -O3 -w ${minsetup} ${DEF} ${INC}
+CFLAGS += -O0 -w -g ${minsetup} ${DEF} ${INC}
 
 minsetup =  -nostartfiles -nostdlib -nodefaultlibs -nolibc 
-AFLAGS	= -mthumb -mcpu=cortex-m3 -mfloat-abi=hard -mfpu=fpv4-sp-d16 ${minsetup}
-LDFLAGS = -T${PDIR}/script.ld -Xlinker --gc-sections --specs=nosys.specs ${minsetup} ${ADDLIB}
+AFLAGS	= -mthumb -mcpu=cortex-m3 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g ${minsetup}
+LDFLAGS = -T${PDIR}/script.ld -Xlinker --gc-sections --specs=nosys.specs -g ${minsetup} ${ADDLIB}
 
 %.o:	${PDIR}/%.c
 	@echo ===
@@ -65,5 +67,8 @@ info:
 	@echo BDIR = ${BDIR}
 	@echo project ${PNAME}
 
-debug:	${PNAME}.elf
-	${GDB} $< -x run.gdb
+program:
+	${OCD} -s ${DDIR} -f ${DDIR}/connect_stlink.cfg -c "reset halt" -c "program ../build/${PNAME}.elf verify reset exit"
+
+connect:
+	${OCD} -s ${DDIR} -f ${DDIR}/connect_stlink.cfg -l ${DDIR}/ocdlog.txt -c "reset halt"

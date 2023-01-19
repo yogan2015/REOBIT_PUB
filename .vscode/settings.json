@@ -33,7 +33,9 @@
         "rb_data.h": "c",
         "header.h": "c",
         "mbs_importlib.h": "c",
-        "k1921bk01t.h": "c"
+        "k1921bk01t.h": "c",
+        "core_cm4.h": "c",
+        "dsp.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.dimInactiveRegions": false

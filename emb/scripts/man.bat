@@ -2,7 +2,6 @@
 @cls
 @echo building project "%1"
 @cd .\projects\%1\build
-@del .\*.elf
 mingw32-make -f .\..\makefile %2
 @del .\*.o
 @del .\*.bin

@@ -38,8 +38,8 @@
     #include "K1921BK01T.h"
     #include "core_cm4.h"             /* Cortex-M4 processor and core peripherals */
 #else
-    #include "../cmn/core/core_cm4.h"
-    #include "../cmn/target/K1921BK01T.h"
+    #include "../../../cmn/core/core_cm4.h"
+    #include "../../../cmn/target/K1921BK01T.h"
 #endif
 
 
@@ -67,12 +67,12 @@ extern int __isr_vector_ram_end;
 //! Разрешение прерываний
 #define EINT __enable_irq()
 
-#define IRQ_PRIORITY_TZ 1
-#define IRQ_PRIORITY_ADC 2
-#define IRQ_PRIORITY_10K 3
-#define IRQ_PRIORITY_CAP 4
-#define IRQ_PRIORITY_CAN 5
-#define IRQ_PRIORITY_1K 6
+#define IRQ_PRIORITY_TZ     1
+#define IRQ_PRIORITY_ADC    2
+#define IRQ_PRIORITY_10K    3
+#define IRQ_PRIORITY_CAP    4
+#define IRQ_PRIORITY_CAN    5
+#define IRQ_PRIORITY_1K     6
 
 
 
