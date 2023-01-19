@@ -32,7 +32,8 @@
         "stdint-gcc.h": "c",
         "rb_data.h": "c",
         "header.h": "c",
-        "mbs_importlib.h": "c"
+        "mbs_importlib.h": "c",
+        "k1921bk01t.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.dimInactiveRegions": false
