@@ -17,6 +17,7 @@ INC 	= -I${PDIR}/inc
 INC    += -I${PDIR}/../../cmn/core
 INC    += -I${PDIR}/../../cmn/target
 INC    += -I${PDIR}/../../cmn/cmsis
+INC    += -I${PDIR}/src
 
 #===( SOURCES )===
 #SRC 	= 

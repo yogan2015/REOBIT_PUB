@@ -25,8 +25,10 @@
 
 #include "DSP.h"
 
+static inline void Init_CLK(void);
+static inline void Init_GPIO(void);
 
-void InitCLK(void);
 int16 main(void);
+
 
 #endif /* VINCLUDE_MAIN_H_ */

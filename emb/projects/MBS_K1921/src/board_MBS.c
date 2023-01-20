@@ -1,0 +1,195 @@
+// Конфигурация для платы MBS_K1921VK01T (Мехатроника, г. Томск)
+#include "../inc/main.h"
+
+//System clock sources
+#define SYSCLK_REFCLK       0
+#define SYSCLK_PORCLK       1
+#define SYSCLK_OSCCLK       2
+#define SYSCLK_PLLCLK       3
+#define SYSCLK_PLLDIVCLK    4
+#define SYSCLK_USB60CLK     5
+#define SYSCLK_USB12CLK     6
+#define SYSCLK_ETH25CLK     7
+
+static inline void Init_GPIO(void)
+{
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN0 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN1 = 0;	//SPI_TX0
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN2 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN3 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN4 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN5 = 0;	//SPI_FSS0
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN6 = 0;	//SPI_CLK0
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN7 = 0;	//SPI_RX0
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN8 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN9 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN10 = 2;	//PWM0_B
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN11 = 2;	//PWM1_B
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN12 = 2;	//PWM2_B
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN13 = 2;	//PWM3_B
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN14 = 2;	//PWM4_B
+	NT_COMMON_REG->GPIOPCTLA_bit.PIN15 = 2;	//PWM5_B
+
+	//NT_COMMON_REG->GPIOPCTLB_bit.PIN0 = 2;	//RAM_Wen		Использована под TDI JTAG'а
+	//NT_COMMON_REG->GPIOPCTLB_bit.PIN1 = 2;	//RAM_Cen[0]	Использована под TMS JTAG'а
+	//NT_COMMON_REG->GPIOPCTLB_bit.PIN2 = 2;	//RAM_Cen[1]	Использована под TCK JTAG'а
+	NT_COMMON_REG->GPIOPCTLB_bit.PIN3 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLB_bit.PIN4 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLB_bit.PIN5 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLB_bit.PIN6 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLB_bit.PIN7 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLB_bit.PIN8 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLB_bit.PIN9 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLB_bit.PIN10 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLB_bit.PIN11 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLB_bit.PIN12 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLB_bit.PIN13 = 2;	//SPI_FSS2
+	NT_COMMON_REG->GPIOPCTLB_bit.PIN14 = 2;	//SPI_CLK2
+	NT_COMMON_REG->GPIOPCTLB_bit.PIN15 = 2;	//SPI_RXD2
+
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN0 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN1 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN2 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN3 = 1;	//UART_TXD0
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN4 = 1;	//UART_RXD0
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN5 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN6 = 2;	//SPI_TXD2
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN7 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN8 = 0;	// LED0
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN9 = 0;	// LED1
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN10 = 0;	// LED2
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN11 = 0;	// LED3
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN12 = 0;	// LED4
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN13 = 0;	// LED5
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN14 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLC_bit.PIN15 = 0;	// ---
+
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN0 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN1 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN2 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN3 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN4 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN5 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN6 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN7 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN8 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN9 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN10 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN11 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN12 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN13 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN14 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLD_bit.PIN15 = 0;	// ---
+
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN0 = 0;	// ---
+	//NT_COMMON_REG->GPIOPCTLE_bit.PIN1 = 2;	//UART_TxD[2]	Использована под TRST JTAG'а
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN2 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN3 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN4 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN5 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN6 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN7 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN8 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN9 = 0;	// ---
+	//NT_COMMON_REG->GPIOPCTLE_bit.PIN10 = 2;	//RAM_Ubn		Использована под TDO JTAG'а
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN11 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN12 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN13 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN14 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLE_bit.PIN15 = 0;	// ---
+
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN0 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN1 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN2 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN3 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN4 = 0;	//SB4
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN5 = 0;	//SB3
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN6 = 0;	//SB2
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN7 = 0;	//SB1
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN8 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN9 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN10 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN11 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN12 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN13 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN14 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLF_bit.PIN15 = 0;	// ---
+
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN0 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN1 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN2 = 0;	//PWM0_A
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN3 = 0;	//PWM1_A
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN4 = 0;	//PWM2_A
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN5 = 0;	//PWM3_A
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN6 = 0;	//PWM4_A
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN7 = 0;	//PWM5_A
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN8 = 0;	//UART_DSR[2]
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN9 = 0;	//UART_RTS[3]
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN10 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN11 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN12 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN13 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN14 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN15 = 0;	// ---
+
+	NT_COMMON_REG->GPIOPCTLH_bit.PIN0 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLH_bit.PIN1 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLH_bit.PIN2 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLH_bit.PIN3 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLH_bit.PIN4 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLH_bit.PIN5 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLH_bit.PIN6 = 0;	// ---
+	NT_COMMON_REG->GPIOPCTLH_bit.PIN7 = 0;	// ---
+}
+
+static inline void Init_CLK()
+{
+	volatile int i;
+
+	NT_BOOTFLASH->T_ACC = 6;		//Задержка от установки адреса, до считывания данных из флеш-памяти (в транзакциях чтения)
+
+	//Настройка частоты тактирования
+	//выходная частота равна FOUT = (FIN * NF) / ( NR * NO), где FIN - частота кварца
+	NT_COMMON_REG->PLL_OD = 1;		//Выходной делитель PLL NO=2
+	NT_COMMON_REG->PLL_NR = 3;		//Опорный делитель PLL NR=R_PLL+2=3
+
+#ifdef QUARTZ_10MHZ
+	NT_COMMON_REG->PLL_NF = 58;		//Делитель обратной связи PLL NF=F_PLL+2=60
+#endif
+#ifdef QUARTZ_12MHZ
+	NT_COMMON_REG->PLL_NF = 48;		//Делитель обратной связи PLL NF=F_PLL+2=50
+#endif
+	NT_COMMON_REG->PLL_NF = 23;
+	do
+	{
+		//Выбор источника синхросигнала
+		//NT_COMMON_REG->SYS_CLK = SYSCLK_REFCLK;		//Выбор источника зависит от состояния сигнала на входе микроконтроллера CPE_pad: 0 - Блок POR, 1 - Вход микроконтроллера XI_OSC
+		NT_COMMON_REG->SYS_CLK = SYSCLK_PLLCLK;		//Блок PLL
+		for(i = 0; i < 50; i++);
+	}
+	while (NT_COMMON_REG->SYS_CLK_bit.CURR_SRC != SYSCLK_PLLCLK);	//Текущий источник тактирования должен совпадать с выбранным
+	
+	// Разрешение работы периферии
+	NT_COMMON_REG->APB_CLK = 0x7FFFF | 0x1000000 | 0x80000;
+
+	for (int i = 0; i < 100; i++){//чтобы типа прошло время... пускай там порезетится
+		NT_COMMON_REG->PER_RST0=0;
+		NT_COMMON_REG->PER_RST1=0;
+	}
+
+	NT_COMMON_REG->PER_RST0 = 0xFFFFFFFF;
+	NT_COMMON_REG->PER_RST1 = 0xFFFFFFFF;
+	NT_COMMON_REG->GPIODEN0	= 0xFFFFFFFF;
+	NT_COMMON_REG->GPIODEN1	= 0xFFFFFFFF;
+	NT_COMMON_REG->GPIODEN2	= 0xFFFFFFFF;
+	NT_COMMON_REG->GPIODEN3	= 0xFFFFFFFF;
+
+	// Настройка тактирования АЦП (12 МГц)
+	NT_COMMON_REG->ADC_CTRL0 = 0x13131313;	// 0x13 = 0b10011, частота тактирования АЦП 120/10
+	NT_COMMON_REG->ADC_CTRL1 = 0x13131313;
+	NT_COMMON_REG->ADC_CTRL2 = 0x13131313;
+
+	// Настройка тактирования UART (25 МГЦ)
+	NT_COMMON_REG->UART_CLK = 0x0B0B0B0B;
+	NT_COMMON_REG->SPI_CLK  = 0x0B0B0B0B;
+}
