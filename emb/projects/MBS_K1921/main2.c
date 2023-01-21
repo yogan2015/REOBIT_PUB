@@ -13,25 +13,31 @@
 int16 main()
 {
     int16 phase = 6;
-
+    uint16_t a = 1;
+    uint32_t b = 1;
+    int16_t  c = 1;
+    int32_t  d = 1;
     Init_CLK();  
     Init_GPIO();
     // конфигурация MODBUS RTU
-        TMbRTUPort *Mb = (TMbRTUPort *)0x20000200;
+        TMbRTUPort *Mb;
         TMbSlaveInfo *SlaveInfo;
         TMbGetData *GetData;
         TMbGetRecord *GetRecord;
 
         UART_Init_TypeDef *UART0_Init;
-
-
+    #define Part1
+    #define Part2
+    #define Part3
+    #ifdef Part1
         SlaveInfo->DeviceDescr      = 'Z';
         SlaveInfo->DeviceInfo       = 'V';
         SlaveInfo->DeviceNumber     = 0;
         SlaveInfo->SlaveID          = 0;
         SlaveInfo->VersionDate      = 0;
         SlaveInfo->VersionNumber    = 0;
-
+    #endif
+    #ifdef Part2
         Mb->Params.UartID           = 0;
         Mb->Params.Mode             = 1; // slave
         Mb->Params.Slave            = 1;
@@ -50,10 +56,8 @@ int16 main()
         Mb->Params.TrEnable         = GetData;
         Mb->Params.GetData          = GetData;
         Mb->Params.GetRecord        = 0;
-
-
-
-    #ifdef MODBUS ON    
+    #endif
+    #ifdef Part3
         UART0_Init->UART_DataWidth  = UART_DataWidth_8;
         UART0_Init->UART_FIFOEn     = DISABLE;
         UART0_Init->UART_ParityBit  = UART_ParityBit_Odd;

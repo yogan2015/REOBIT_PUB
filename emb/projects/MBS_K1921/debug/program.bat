@@ -1,1 +1,1 @@
-openocd -f connect_stlink.cfg -c "reset halt" -c "program ../build/%1.elf verify reset exit"
+openocd -f connect_stlink.cfg -c "reset halt" -c "program ../build/%1.elf verify reset exit" -s "."

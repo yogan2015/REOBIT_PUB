@@ -1,5 +1,5 @@
-@openocd -f connect_stlink.cfg -c "reset halt"
-@echo РЎРѕРµРґРёРЅРµРЅРёРµ РІС‹РїРѕР»РЅРµРЅРѕ
+openocd -f connect_stlink.cfg -c "reset halt" -s .
+@echo Соединение выполнено
 pause
-@echo РЎРѕРµРґРёРЅРµРЅРёРµ Р·Р°РІРµСЂС€РµРЅРѕ
+@echo Соединение завершено
 @openocd -c "exit"
