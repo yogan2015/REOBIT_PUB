@@ -38,15 +38,15 @@
     #include "K1921BK01T.h"
     #include "core_cm4.h"             /* Cortex-M4 processor and core peripherals */
 #else
-    #include "../../../cmn/core/core_cm4.h"
     #include "../../../cmn/target/K1921BK01T.h"
+    #include "../../../cmn/core/core_cm4.h"
 #endif
 
 
 typedef char int8;
-typedef unsigned char Uint8;
-typedef unsigned short int Uint16;
-typedef unsigned int Uint32;
+typedef unsigned char uint8;
+typedef unsigned short int uint16;
+typedef unsigned int uint32;
 typedef short int int16;
 typedef int int32;
 typedef unsigned long long Uint64;

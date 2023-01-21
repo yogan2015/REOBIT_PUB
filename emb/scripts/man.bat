@@ -2,7 +2,8 @@
 @cls
 @echo building project "%1"
 @cd .\projects\%1\build
-mingw32-make -f .\..\makefile %2
+mingw32-make -f .\..\makefile %2 1>scenario.log 2>errors.log
 @del .\*.o
+@del ..\src\*.o
 @del .\*.bin
 @cd ..\..\..

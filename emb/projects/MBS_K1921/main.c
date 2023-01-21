@@ -1,372 +1,48 @@
-/******************************************************************************
- * @file		main.c
- * @brief		Главный файл проекта
- * @version		v1.0
- * @date		11 декабря 2015
- *
- * @note
- * ООО "НПФ Вектор" (http://motorcontrol.ru), все права защищены.
- *
- * @par
- * ООО "НПФ Вектор" распространяет это программное обеспечение в демонстрационных
- * целях, и оно может распространяться свободно.
- *
- * @par
- * Данное программное обеспечение распространяется "как есть", и Вы,
- * его пользователь, принимаете на себя все риски, связанные с его использованием.
- * ООО "НПФ Вектор" не несет никакой ответственности за возможные убытки,
- * связанные с его использованием.
- *
- ******************************************************************************/
+#define MB_MODE 1
+#include "inc/main.h"
 
-//В этом примере показана работа с модулями широтно-импульсной модуляции.
-//Производится настройка всех необходимых периферийных регистров: дискретных ножек,
-//таймеров ШИМ, модулей "мертвого" времени и др. Для демонстрации работы ШИМ
-//применяются светодиоды, расположенные на плате. Яркость свечения диода
-//пропорциональна скважности соответствующего ШИМ-сигнала.
+#if defined(MB_MODE)
+	#include "../../cmn/modbus/modbus_rtu.h"
+#endif
 
-#include "main.h"
-#include "PWM_macros.h"
-#include <string.h>	//для memcpy
+// RS485 Communication driver structure
+#if defined(MB_MODE)
+	TMbRTUPort *Mb = (TMbRTUPort *)0x20000200;
+#endif
 
+// Project local function prototypes
 
-//Макросы для включения/выключения светодиодов на плате ControlCARD
-//Можно использовать команды вида NT_GPIOC->DATA &= ~(1 << 2) и NT_GPIOC->DATA |= (1 << 2), но
-//таким образом порты меняют состояние не сразу, а через 2 такта (это связано с синхронизацией), и, если
-//подряд написать 2 строчки, например NT_GPIOC->DATA &= ~(1 << 2) и NT_GPIOC->DATA &= ~(1 << 3), то первая
-//с большой вероятностью не сработает, так как доступ к биту осуществляется сначала чтением всего слова, изменением нужного
-//бита и записью его назад. Но чтение из GPIO возвращает текущее состояние порта, и к моменту выполнения второй команды (второй строки Си)
-//прочитанное состояние не будет содержать изменений, которые сделала первая команда, поэтому вторая команда затрет тот бит,
-//который хотела выставить первая команда.
-//При этом проблема проявляется только при включенной высокой оптимизации компилятора. Без оптимизации компилятор генерирует
-//достаточно много ассемблерных команд между обращениями к GPIO и синхронизация успевает выполниться.
+#if defined(MB_MODE)
+	static void ModbusUpdate(void);
+	static void ModbusTxControl(char);
+#endif
 
-//Другой способ - обращение к GPIO по маске (см. документацию): MASKLOWBYTE - к младшему байту регистра, MASKHIGHBYTE - к старшему.
-//Допустим, мы хотим выдать "1" на GPIO2, GPIO3 и GPIO4 порта C:
-//0001 1100		маска, является индексом в массиве MASKLOWBYTE
-//xxx1 11xx		записываемое значение: в нужных битах - единицы, в остальных - не важно, т.к. они не попадают в маску и не будут изменены
-//NT_GPIOC->MASKLOWBYTE_bit[28].MASKLB = 28;	так выглядит код команды, как вариант: NT_GPIOC->MASKLOWBYTE_bit[28].MASKLB = 0xFF;
-//если надо включить GPIO2 и GPIO4 и выключить GPIO3, то:
-//NT_GPIOC->MASKLOWBYTE_bit[28].MASKLB = 20;	20 = 0001 0100b
-//Доступ к битам порта по маске гарантирует, что другие биты, которые не попадают в маску, будут не затронуты.
-//Также доступ по маске позволяет одновременно одной командой переключить два бита порта, если это требуется.
-
-#define VD1_ON NT_GPIOC->MASKLOWBYTE_bit[8].MASKLB = 0			//NT_GPIOC->DATA &= ~(1 << 3)
-#define VD1_OFF NT_GPIOC->MASKLOWBYTE_bit[8].MASKLB = 8			//NT_GPIOC->DATA |= (1 << 3)
-
-#define VD2_ON NT_GPIOC->MASKLOWBYTE_bit[4].MASKLB = 0			//NT_GPIOC->DATA &= ~(1 << 2)
-#define VD2_OFF NT_GPIOC->MASKLOWBYTE_bit[4].MASKLB = 4			//NT_GPIOC->DATA |= (1 << 2)
-
-#define VD3_ON NT_GPIOB->MASKLOWBYTE_bit[32].MASKLB = 0			//NT_GPIOB->DATA &= ~(1 << 5)
-#define VD3_OFF NT_GPIOB->MASKLOWBYTE_bit[32].MASKLB = 32		//NT_GPIOB->DATA |= (1 << 5)
-
-#define VD4_ON NT_GPIOB->MASKLOWBYTE_bit[64].MASKLB = 0			//NT_GPIOB->DATA &= ~(1 << 6)
-#define VD4_OFF NT_GPIOB->MASKLOWBYTE_bit[64].MASKLB = 64		//NT_GPIOB->DATA |= (1 << 6)
-
-#define VD5_ON NT_GPIOB->MASKLOWBYTE_bit[128].MASKLB = 0		//NT_GPIOB->DATA &= ~(1 << 7)
-#define VD5_OFF NT_GPIOB->MASKLOWBYTE_bit[128].MASKLB = 128		//NT_GPIOB->DATA |= (1 << 7)
-
-#define VD6_ON NT_GPIOB->MASKHIGHBYTE_bit[1].MASKHB = 0			//NT_GPIOB->DATA &= ~(1 << 8)
-#define VD6_OFF NT_GPIOB->MASKHIGHBYTE_bit[1].MASKHB = 1		//NT_GPIOB->DATA |= (1 << 8)
-
-
-
-
-//Глобальная переменная скорости изменения скважности ШИМ (может быть изменена при остановке расчета в окне просмотра переменных)
-int PWMBlinkingSpeed = 3;
-
-
-//Функция инициализации дискретных выходов микроконтроллера для управления светодиодами
-void LED_init (void)
-{
-	//Для каждой дискретной ножки нужно:
-	//1)Выключить привязанные к этой ножке спецфункции путем сброса соответствующего бита в регистре спецфункций порта.
-	//Для сброса бита нужно записать "1" в соответствующий бит регистра ALTFUNCCLR (CLR - clear - очистить).
-	//Если нужно наоборот включить спецфункцию, то следует записать "1" в соответствующий бит регистра ALTFUNCSET (SET - установить).
-	//Прочитать текущее состояние регистра спецфункций порта можно, прочитав любой из двух регистров ALTFUNCCLR или ALTFUNCSET.
-	//2)Разрешить ножке работать на вывод путем записи "1" в соответствующий бит регистра OUTENSET.
-	NT_GPIOC->ALTFUNCCLR_bit.ALTFUNCCLR = (1 << 2);
-	NT_GPIOC->OUTENSET_bit.OUTENSET |= (1 << 2);
-	NT_GPIOC->ALTFUNCCLR_bit.ALTFUNCCLR = (1 << 3);
-	NT_GPIOC->OUTENSET_bit.OUTENSET |= (1 << 3);
-	//Почему команды NT_GPIOC->ALTFUNCCLR_bit.ALTFUNCCLR = (1 << 2); и NT_GPIOC->OUTENSET_bit.OUTENSET |= (1 << 2); отличаются,
-	//ведь они выполняют по сути одну и ту же операцию: изменение 2-го бита (если считать от нуля) в регистре?
-	//Дело в том, что для записи одного бита в регистр он сначала читается целиком,
-	//затем выставляется "1" во втором бите, остальные не меняются, и регистр записывается обратно целиком.
-	//По команде ALTFUNCCLR = (1 << 2) в регистр будут записаны все нули и "1" во втором бите.
-	//Разница состоит в том, что при чтении регистров OUTENSET и ALTFUNCCLR "1" и там и там означет включенную
-	//работу ножки на вывод или альтернативную функцию, соответственно. НО! При записи "1" в OUTENSET происходит включение
-	//ножки на вывод, а в ALTFUNCCLR - вЫключение альт. функции. Рассмотрим пример:
-	//NT_GPIOC->OUTENSET_bit.OUTENSET |= (1 << 7);
-	//0000 1100 0000 1111			исходное состояние: пусть были включены на вывод ножки 0-3 и 10-11
-	//0000 1100 0000 1111			чтение регистра целиком
-	//0000 1100 1000 1111			добавление "1" в 7-й бит
-	//0000 1100 1000 1111			запись регистра целиком
-	//0000 1100 1000 1111			результат: включены все ножки, что и в исходном состоянии + 7-я, как и требовалось
-	//NT_GPIOC->ALTFUNCCLR_bit.ALTFUNCCLR |= (1 << 7);
-	//0000 1100 1000 1111			исходное состояние: пусть были включены альт. функции ножек 0-3, 7 и 10-11
-	//0000 1100 1000 1111			чтение регистра целиком
-	//0000 1100 1000 1111			добавление "1" в 7-й бит (т.к. альт. функция была включена, состояние регистра не изменилось)
-	//0000 1100 1000 1111			запись регистра целиком
-	//0000 0000 0000 0000			результат: выключены все ножки, т.к. при чтении "1" означает включенное состояние, а при записи "1" означает команду "выключить"
-	//NT_GPIOC->ALTFUNCCLR_bit.ALTFUNCCLR = (1 << 7);	чтобы добиться желаемого результата, нужно записать "1" только в 7-й бит и "0" - во все остальные:
-	//0000 1100 1000 1111			исходное состояние: пусть были включены альт. функции ножек 0-3, 7 и 10-11
-	//0000 1100 1000 1111			чтение регистра целиком
-	//0000 0000 1000 0000			запись "1" в 7-й бит и "0" в остальные
-	//0000 0000 1000 0000			запись регистра целиком
-	//0000 1100 0000 1111			результат: выключена только требуемая ножка, как и требовалось
-	//Аналогичная ситуация может быть и с остальными регистрами типа SET и CLR. Подробнее - см. документацию на микроконтроллер, как
-	//работают соответствующие регистры на чтение.
-}
-
-
-void PWM_init (void)
-{
-	//Светодиоды 3-6 (зеленые) управляются ножками, которые можно настроить в режиме ШИМ. Выполним настройку.
-	//1) Выбираем нужную альт. функцию (ШИМ-выход)
-	//2) Активируем альтернативную функцию
-	NT_COMMON_REG->GPIOPCTLB_bit.PIN5 = 2;				//альт. функция - PWM_A7
-	NT_GPIOB->ALTFUNCSET_bit.ALTFUNCSET |= (1 << 5);
-
-	NT_COMMON_REG->GPIOPCTLB_bit.PIN6 = 2;				//альт. функция - PWM_B7
-	NT_GPIOB->ALTFUNCSET_bit.ALTFUNCSET |= (1 << 6);
-
-	NT_COMMON_REG->GPIOPCTLB_bit.PIN7 = 2;				//альт. функция - PWM_A8
-	NT_GPIOB->ALTFUNCSET_bit.ALTFUNCSET |= (1 << 7);
-
-	NT_COMMON_REG->GPIOPCTLB_bit.PIN8 = 2;				//альт. функция - PWM_B8
-	NT_GPIOB->ALTFUNCSET_bit.ALTFUNCSET |= (1 << 8);
-
-
-	//Настроим модули ШИМ
-	//сбрасываем все флаги аварий TZ и их прерываний
-	NT_PWM7->TZCLR = 0x7;
-	NT_PWM7->TZINTCLR_bit.TZINT = 1;
-	NT_PWM8->TZCLR = 0x7;
-	NT_PWM8->TZINTCLR_bit.TZINT = 1;
-
-	//Модуль PWM7 - диоды 3 и 4
-	NT_PWM7->TBPRD = 10000;							//Период счета таймера - 10000, что соответствует частоте ШИМ 5 кГц при счете вверх-вниз
-	NT_PWM7->TBPHS_bit.TBPHS = 0x0000;				//Фазовый сдвиг - 0
-	NT_PWM7->TBCTR = 0x0000;						//Очищаем счетчик таймера
-
-	NT_PWM7->TBCTL_bit.PRDLD = TB_SHADOW;			//Загрузка периода в TBPRD при TBCTR = 0
-	NT_PWM7->TBCTL_bit.CTRMODE = TB_COUNT_UPDOWN;	//Режим счета - вверх-вниз
-	NT_PWM7->TBCTL_bit.PHSEN = TB_DISABLE;			//Запрещена загрузка счетчика TBCTR значением регистра фазы TBPHS при получении события синхронизации
-	NT_PWM7->TBCTL_bit.HSPCLKDIV = 0;				//Второй делитель тактовой частоты - 1
-	NT_PWM7->TBCTL_bit.CLKDIV = 0;					//Первый делитель тактовой частоты - 1
-	NT_PWM7->TBCTL_bit.SYNCOSEL = TB_CTR_ZERO;		//Выдаём синхро-сигнал при TBCTR = 0
-
-	NT_PWM7->CMPCTL_bit.SHDWAMODE = CC_SHADOW;		//Включить SHADOW для сравнения (загрузка уставки сравнения через теневой регистр)
-	NT_PWM7->CMPCTL_bit.LOADAMODE = CC_CTR_ZERO;	//Загрузка уставки сравнения по нулю счетчика
-	NT_PWM7->CMPCTL_bit.SHDWBMODE = CC_SHADOW;		//Включить SHADOW для сравнения (загрузка уставки сравнения через теневой регистр)
-	NT_PWM7->CMPCTL_bit.LOADBMODE = CC_CTR_ZERO;	//Загрузка уставки сравнения по нулю счетчика
-
-	NT_PWM7->CMPA_bit.CMPA = 0;						//Уставка сравнения
-
-	NT_PWM7->AQCTLA = 0;							//Для начала события для PWMA запрещены
-	NT_PWM7->AQCTLA_bit.ZRO = 1;					//Обнуляем выход при нуле счетчика
-	NT_PWM7->AQCTLA_bit.CAU = 2;					//Включаем выход при сравнении на возрастающей ветви счета (когда счеткик считает вверх)
-	NT_PWM7->AQCTLA_bit.CAD = 1;					//Обнуляем выход при сравнении на спадающей ветви счета
-
-	//Для PWMB тоже самое, что для PWMА. Без инверсии. Инверсия далее в модуле МВ
-	NT_PWM7->AQCTLB = NT_PWM7->AQCTLA;				//Тоже самое
-	NT_PWM7->AQSFRC_bit.RLDCSF = 3;					//Реагировать на программную привязку ног без теневого регистра
-
-	//Настройка мертвого времени
-	//Т.к. от ШИМ-выхода управляются диоды, мертвое время можно задать нулевым
-	NT_PWM7->DBRED = 0;
-	NT_PWM7->DBFED = NT_PWM7->DBRED;
-	NT_PWM7->DBCTL_bit.IN_MODE = DBA_RED_DBB_FED;	//Сигнал PWMA используется для контроля по переднему фронту, а сигнал PWMB – по заднему
-	NT_PWM7->DBCTL_bit.OUT_MODE = DB_FULL_ENABLE;	//Задержка включена для переднего фронта PWMA и заднего фронта PWMB
-	NT_PWM7->DBCTL_bit.POLSEL = DB_ACTV_HIC;		//Задание полярности сигнала на выходе: инверсия только на выводе PWMB
-
-	NT_PWM7->ETSEL_bit.INTSEL = ET_DISABLE;			//Событие для прерывания модуля ШИМ не выбрано
-	NT_PWM7->ETSEL_bit.INTEN = 0;					//Запретить прерывания модуля ШИМ
-
-	NT_PWM7->TBCTL_bit.FREE_SOFT = 0;				//Остановка таймера сразу при остановке процессора
-
-	//Запрещаем всем TZ быть источникоми аппаратной аварии (one-shot)
-	NT_PWM7->TZSEL_bit.OSHT0 = TZ_DISABLE;
-	NT_PWM7->TZSEL_bit.OSHT1 = TZ_DISABLE;
-	NT_PWM7->TZSEL_bit.OSHT2 = TZ_DISABLE;
-	NT_PWM7->TZSEL_bit.OSHT3 = TZ_DISABLE;
-	NT_PWM7->TZSEL_bit.OSHT4 = TZ_DISABLE;
-	NT_PWM7->TZSEL_bit.OSHT5 = TZ_DISABLE;
-
-	//Запрещаем прерывание по аварии (one-shot)
-	NT_PWM7->TZEINT_bit.OST = 0;
-
-	//При получении сигнала аппаратной аварии ШИМ-выходы переводятся в Z-состояние
-	NT_PWM7->TZCTL_bit.TZA = 0;
-	NT_PWM7->TZCTL_bit.TZB = 0;
-
-	//Модуль PWM8 - диоды 5 и 6
-	//Во многом настройка аналогична PWM7
-	NT_PWM8->TBPRD = NT_PWM7->TBPRD;				//Период такой же
-	NT_PWM8->TBPHS_bit.TBPHS = 1;					//Фаза равна 1, так как при сдвиге 0 из-за ошибки в процессоре таймеры оказываются сдвинуты на половину периода.
-	NT_PWM8->TBCTR = 0x0000;
-
-	NT_PWM8->TBCTL_bit.PRDLD = TB_SHADOW;
-	NT_PWM8->TBCTL_bit.CTRMODE = TB_COUNT_UPDOWN;
-	NT_PWM8->TBCTL_bit.PHSEN = TB_ENABLE;			//Включить загрузку фазы по синхросигналу
-	NT_PWM8->TBCTL_bit.HSPCLKDIV = 0;
-	NT_PWM8->TBCTL_bit.CLKDIV = 0;
-	NT_PWM8->TBCTL_bit.SYNCOSEL = TB_SYNC_IN;		//Пропускаем синхро-сигнал "насквозь"
-
-	NT_PWM8->CMPCTL_bit.SHDWAMODE = CC_SHADOW;
-	NT_PWM8->CMPCTL_bit.LOADAMODE = CC_CTR_ZERO;
-	NT_PWM8->CMPCTL_bit.SHDWBMODE = CC_SHADOW;
-	NT_PWM8->CMPCTL_bit.LOADBMODE = CC_CTR_ZERO;
-
-	NT_PWM8->CMPA_bit.CMPA = 0;
-
-	//События так же, как и для NT_PWM7
-	NT_PWM8->AQCTLA = NT_PWM7->AQCTLA;
-	NT_PWM8->AQCTLB = NT_PWM7->AQCTLA;
-	NT_PWM8->AQSFRC_bit.RLDCSF = 3;
-
-	NT_PWM8->DBRED = NT_PWM7->DBRED;
-	NT_PWM8->DBFED = NT_PWM8->DBRED;
-	NT_PWM8->DBCTL_bit.IN_MODE = NT_PWM7->DBCTL_bit.IN_MODE;
-	NT_PWM8->DBCTL_bit.OUT_MODE = NT_PWM7->DBCTL_bit.OUT_MODE;
-	NT_PWM8->DBCTL_bit.POLSEL = NT_PWM7->DBCTL_bit.POLSEL;
-
-	NT_PWM8->ETSEL_bit.INTSEL = ET_DISABLE;
-	NT_PWM8->ETSEL_bit.INTEN = 0;
-
-	NT_PWM8->TBCTL_bit.FREE_SOFT = 0;
-
-	NT_PWM8->TZSEL_bit.OSHT0 = TZ_DISABLE;
-	NT_PWM8->TZSEL_bit.OSHT1 = TZ_DISABLE;
-	NT_PWM8->TZSEL_bit.OSHT2 = TZ_DISABLE;
-	NT_PWM8->TZSEL_bit.OSHT3 = TZ_DISABLE;
-	NT_PWM8->TZSEL_bit.OSHT4 = TZ_DISABLE;
-	NT_PWM8->TZSEL_bit.OSHT5 = TZ_DISABLE;
-
-	NT_PWM8->TZCTL_bit.TZA = 0;
-	NT_PWM8->TZCTL_bit.TZB = 0;
-
-	NT_COMMON_REG->PWM_SYNC_bit.TBCLKSYNC = 0x01FF;					//синхронизация таймеров
-}
-
-
-void Timer_and_interrupt_init (void)
-{
-	volatile uint32_t priority;
-	volatile uint32_t priorityGroup;
-
-    extern int *g_pfnVectors;//Указатель на массив векторов прерываний, объявлен в startup_MCP_gcc.s
-    //Надо показать в регистре SCB->VTOR, где лежит таблица прерываний.
-    //А лежит она там, куда записал её линкер, в зависимости от файла компоновки.
-    //Поэтому берем адрес от массива g_pfnVectors и кладем туда
-    SCB->VTOR = (uint32_t)(&g_pfnVectors);//Sets the vector table location and Offset.
-
-    DINT;	//запретить все прерывания
-
-	//Настраиваем группировку прерываний. Значение "4" означает, что будет использовано 8 групп и 2 подгруппы.
-    //Чем меньше номер группы или подгруппы, тем выше приоритет прерываний в ней.
-    //Прерывания по группам работают с "вытеснением", а по подгруппам - без "вытеснения".
-    //Пример. Если во время обработки прерывания группы 5 возник запрос на обработку прерывания группы 2, то
-    //начнется процедура обработки прерывания группы 2, а после его завершения процессор продолжит
-    //обработку прерывания группы 5. Если во время обработки прерывания ПОДгруппы 1 возник запрос на обработку
-    //прерывания ПОДгруппы 0 (внутри одной группы), то процессор продолжит обработку прерывания "1" и только
-    //после ее завершения перейдет к обработке прервыания "0". Если же запросы на обработку прерываний
-    //ПОДгрупп 0 и 1 возникли одновременно, то первым обработается прерывание ПОДгруппы 0.
-    NVIC_SetPriorityGrouping(4);	//В данном процессоре под группы/подгруппы отведено только 3 бита, т.е. будет 8 групп и 0 подгрупп
-
-    priorityGroup = NVIC_GetPriorityGrouping();	//прочитаем группировку прерываний для дальнейшего пользования
-
-    //запретим прерывания от таймеров общего назначения 0 и 1
-    NVIC_DisableIRQ(TIM0_IRQn);
-    NVIC_DisableIRQ(TIM1_IRQn);
-    //и сбросим "висящие" флаги этих прерываний
-    NVIC_ClearPendingIRQ(TIM0_IRQn);
-    NVIC_ClearPendingIRQ(TIM1_IRQn);
-
-    //Настроим прерывание таймера 0
-    NVIC_EnableIRQ(TIM0_IRQn);											//разрешим
-    priority = NVIC_EncodePriority(priorityGroup, IRQ_PRIORITY_10K, 0); //кодирование приоритета
-    NVIC_SetPriority(TIM0_IRQn,priority);								//задание приоритета
-    //Настроим прерывание таймера 1 (аналогично)
-    NVIC_EnableIRQ(TIM1_IRQn);
-    priority = NVIC_EncodePriority(priorityGroup, IRQ_PRIORITY_1K, 0);
-    NVIC_SetPriority(TIM1_IRQn,priority);
-
-    //Настройка таймеров
-    //Настройка таймера 0 на 10 кГц
-    NT_TIMER0->INTSTATUS_INTCLEAR_bit.INT = 1;		//очистка флага прерывания таймера
-    NT_TIMER0->RELOAD = 10000-1;					//Частота тактирования - 100 МГц. Период таймера - 100000кГц/10кГц = 10000. 10000-1 пишется, т.к. таймер считает с нуля.
-    NT_TIMER0->CTRL = ( (1 << 0) | (1 << 3) );		//Запуск таймера (нулевой бит регистра CTRL) и разрешение прерываний (третий бит)
-    //Настройка таймера 1 на 1 кГц (аналогично)
-    NT_TIMER1->INTSTATUS_INTCLEAR_bit.INT = 1;
-    NT_TIMER1->RELOAD = 100000-1;
-    NT_TIMER1->CTRL = ( (1 << 0) | (1 << 3) );
-
-    EINT;	//Разрешить прерывания
-}
-
-
-int16 main (void){
-	//Инициализация микроконтроллера: настройка таймеров, инициализаци периферийных устройств
-	InitCLK();
-	//копируем функции секции fastcode из флеша в оперативку
-	memcpy(&__fastcode_ram_start, &__fastcode_flash_start,((Uint32)(&__fastcode_ram_end) - (Uint32)(&__fastcode_ram_start)));
-	//копируем таблицу векторов прерываний isr_vector из флеша в оперативку, чтобы быстрее работало
-	memcpy(&__isr_vector_ram_start, &__isr_vector_flash_start,((Uint32)(&__isr_vector_ram_end) - (Uint32)(&__isr_vector_ram_start)));
-
-	//Инициализация периферии для управления диодами
-	LED_init();
-
-	//Инициализация ШИМ
-	PWM_init();
-
-	//Инициализация таймеров общего назначения и прерываний
-	Timer_and_interrupt_init();
-
-	//бесконечный цикл
-	while(1)
+#if defined(MB_MODE)
+	void USART0_RX_IRQHandler(void)
 	{
-		;
-	}
-}
-
-//Процедуры обработки прерываний
-//Таймер 1 (1 кГц)
-void TIM1_IRQHandler (void)
-{
-	static int Timer1K;
-	Timer1K++;
-	//1й светодиод загорается и гаснет с периодом в 1 секунду
-	if (Timer1K > 1000)
-	{
-		VD1_OFF;
-		Timer1K = 0;
-	}
-	else if (Timer1K > 500)
-	{
-		VD1_ON;
+	ModBusRTURxIsr(Mb);
+	UART_ITStatusClear(NT_UART0, UART_ITSource_RxFIFOLevel);
 	}
 
-	NT_TIMER1->INTSTATUS_INTCLEAR_bit.INT = 1;	//Сбросим флаг прерывания таймера
-}
-//Таймер 0 (10 кГц)
-void TIM0_IRQHandler (void)
-{
-	//Скважность работы диода 3 нарастает линейно с заданной скоростью, дидода 5 - ступенчато.
-	//Диоды 4 и 6 работают комплиментарно с диодами 3 и 5 соответственно.
-	NT_PWM7->CMPA_bit.CMPA += PWMBlinkingSpeed;
-	if (NT_PWM7->CMPA_bit.CMPA >= NT_PWM7->TBPRD)
+	void USART0_TX_IRQHandler(void)
 	{
-		NT_PWM7->CMPA_bit.CMPA = 0;
-		NT_PWM8->CMPA_bit.CMPA += 2000;
-		if (NT_PWM8->CMPA_bit.CMPA >= NT_PWM8->TBPRD)
-			NT_PWM8->CMPA_bit.CMPA = 0;
+	ModBusRTUTxIsr(Mb);
+	UART_ITStatusClear(NT_UART0, UART_ITSource_TxFIFOLevel);
+	}
+#endif
+
+#if defined(MB_MODE)
+	static void ModbusUpdate(void)
+	{
+	Mb->Params.Slave = BrdData->Slave;
+	BrdData->Status.bit.Mb = Mb->Packet.Connected;
+
+	ModBusRTUInvoke(Mb);
+	ModBusRTUTimings(Mb);
 	}
 
-	NT_TIMER0->INTSTATUS_INTCLEAR_bit.INT = 1;	//Сбросим флаг прерывания таймера
-}
-
-
-/*@}*/
-
+	static void ModbusTxControl(char Level)
+	{
+	GPIO_WriteBit(NT_GPIOE, GPIO_Pin_15, Level);
+	}
+#endif

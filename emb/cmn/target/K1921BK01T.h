@@ -21,6 +21,15 @@
 * FILE K1921BK01T.h
 */
 
+#ifndef RELPATH
+
+  #define __INT16_TYPE__  signed char
+  #define __UINT16_TYPE__ unsigned char
+  #define __INT32_TYPE__  signed int
+  #define __UINT32_TYPE__ unsigned int
+  #include <stdint.h>
+#endif
+
 #if __STDC__ == 1
 //#error This file can not be used in Strict ANSI mode
 #endif

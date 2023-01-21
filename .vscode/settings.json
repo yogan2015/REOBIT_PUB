@@ -35,7 +35,9 @@
         "mbs_importlib.h": "c",
         "k1921bk01t.h": "c",
         "core_cm4.h": "c",
-        "dsp.h": "c"
+        "dsp.h": "c",
+        "niietcm4.h": "c",
+        "niietcm4_dma.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.dimInactiveRegions": false

@@ -18,18 +18,22 @@ INC    += -I${PDIR}/../../cmn/core
 INC    += -I${PDIR}/../../cmn/target
 INC    += -I${PDIR}/../../cmn/cmsis
 INC    += -I${PDIR}/src
+INC    += -I${PDIR}/../../cmn/modbus
 
 #===( SOURCES )===
-#SRC 	= 
-#SRC   +=
+SRC = $(wildcard ${PDIR}/src/niietcm4_*.c)
+SRCo = $(subst .c,.o,$(SRC))
 
 #===( LIBS )===
 ADDLIB	= -L${PDIR}/../../cmn/stdlib
 ADDLIB += -lc -lm -lgcc
-
+ADDLIB += -L${PDIR}/../../cmn/modbus
+ADDLIB += -lmodbus_rtu_m4f
 #===( DEFINE )===
 DEF 	= #-DDEBUG
 DEF    += -DRELPATH
+DEF    += -DK1921VK01T
+DEF    += -D__FPU_PRESENT
 	
 #===( FLAGS )===
 CFLAGS	= -mthumb -mcpu=cortex-m3 -mfloat-abi=hard -mfpu=fpv4-sp-d16
@@ -55,8 +59,10 @@ LDFLAGS = -T${PDIR}/script.ld -Xlinker --gc-sections --specs=nosys.specs -g ${mi
 	@echo compiling $@ from ASM
 	$(CC) -c -o $@ $< $(AFLAGS)
 
-all:	main2.o startup.o	
+all:	main2.o startup.o ${SRCo}
 	@echo ===
+	@echo [SOURCES]: ${SRC}
+	@echo [OBJECTS]: ${SRCo}
 	@echo linking ${PNAME}.elf from $^.o
 	${LD} ${LDFLAGS} -o ${PNAME}.elf $^
 	${OCOP} -O binary ${PNAME}.elf ${PNAME}.bin

@@ -1,6 +1,9 @@
 // Конфигурация для платы MBS_K1921VK01T (Мехатроника, г. Томск)
-#include "../inc/main.h"
-
+#ifdef RELPATH
+    #include "main.h"
+#else
+    #include "../inc/main.h"
+#endif
 //System clock sources
 #define SYSCLK_REFCLK       0
 #define SYSCLK_PORCLK       1
@@ -152,14 +155,8 @@ static inline void Init_CLK()
 	//выходная частота равна FOUT = (FIN * NF) / ( NR * NO), где FIN - частота кварца
 	NT_COMMON_REG->PLL_OD = 1;		//Выходной делитель PLL NO=2
 	NT_COMMON_REG->PLL_NR = 3;		//Опорный делитель PLL NR=R_PLL+2=3
-
-#ifdef QUARTZ_10MHZ
-	NT_COMMON_REG->PLL_NF = 58;		//Делитель обратной связи PLL NF=F_PLL+2=60
-#endif
-#ifdef QUARTZ_12MHZ
-	NT_COMMON_REG->PLL_NF = 48;		//Делитель обратной связи PLL NF=F_PLL+2=50
-#endif
 	NT_COMMON_REG->PLL_NF = 23;
+
 	do
 	{
 		//Выбор источника синхросигнала
@@ -193,3 +190,4 @@ static inline void Init_CLK()
 	NT_COMMON_REG->UART_CLK = 0x0B0B0B0B;
 	NT_COMMON_REG->SPI_CLK  = 0x0B0B0B0B;
 }
+
