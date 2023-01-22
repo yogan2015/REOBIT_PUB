@@ -1,1 +1,1 @@
-openocd -f connect_stlink.cfg -c "reset halt" -c "program ../build/%1.elf verify reset exit" -s "."
+"../../../utils/openocd-win/bin/openocd" -s "../../../utils/openocd-win/scripts" -f "./k1921/k1921vk01t/connect_stlink.cfg" -c "reset halt" -c "program ../build/%1.elf verify reset exit"

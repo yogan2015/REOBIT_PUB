@@ -10,7 +10,7 @@ OCOP	= ${prefix}/arm-none-eabi-objcopy
 SZ		= ${prefix}/arm-none-eabi-size
 ODUM	= ${prefix}/arm-none-eabi-objdump
 GDB		= ${prefix}/arm-none-eabi-gdb
-OCD		= C:/WORK/openocd/bin/openocd
+OCD		= ${CURDIR}/../../../utils/openocd-win
 
 #===( INCLUDE )===
 INC 	= -I${PDIR}/inc
@@ -75,7 +75,7 @@ info:
 	@echo project ${PNAME}
 
 program:
-	${OCD} -s ${DDIR} -f ${DDIR}/connect_stlink.cfg -c "reset halt" -c "program ../build/${PNAME}.elf verify reset exit"
+	${OCD}/bin/openocd -s "${OCD}/scripts" -f "${OCD}/scripts/k1921/k1921vk01t/connect_stlink.cfg" -c "reset halt" -c "program ${BDIR}/${PNAME}.elf verify reset exit"
 
 connect:
-	${OCD} -s ${DDIR} -f ${DDIR}/connect_stlink.cfg -l ${DDIR}/ocdlog.txt -c "reset halt"
+	${OCD}/bin/openocd -s ${DDIR} -f ${DDIR}/connect_stlink.cfg -l ${DDIR}/ocdlog.txt -c "reset halt"

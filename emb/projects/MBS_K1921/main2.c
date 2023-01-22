@@ -79,8 +79,8 @@ int16 main()
     {
         for (int32 j = 0; j<120000; j++)
         { asm("nop");  asm("nop");  asm("nop"); asm("nop");  asm("nop");  asm("nop");}
-        phase--;
-        if (phase<0) phase = 5;
+        phase++;
+        if (phase>5) phase = 0;
             switch (phase)
             {
             case 0:
