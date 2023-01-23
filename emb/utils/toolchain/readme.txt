@@ -1,2 +1,1 @@
-https://developer.arm.com/downloads/-/gnu-rm - качать тут
-в PATH добавл€ть не надо, достаточно в makefile установить корректный ${prefix}
+¬ папке bin содержитс€ копи€ GNU-tools-for-STM32 из набора утилит STM32Cube_CLT

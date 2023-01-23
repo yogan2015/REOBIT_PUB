@@ -43,7 +43,7 @@ CFLAGS += -O0 -w -g ${minsetup} ${DEF} ${INC}
 
 minsetup =  -nostartfiles -nostdlib -nodefaultlibs -nolibc 
 AFLAGS	= -mthumb -mcpu=cortex-m3 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g ${minsetup}
-LDFLAGS = -T${PDIR}/script.ld -Xlinker --gc-sections --specs=nosys.specs -g ${minsetup} ${ADDLIB}
+LDFLAGS = -T${PDIR}/script.ld -Xlinker --gc-sections -specs=nosys.specs  -g ${minsetup} ${ADDLIB}
 
 %.o:	${PDIR}/%.c
 	@echo ===
@@ -77,6 +77,9 @@ info:
 
 program:
 	${OCD}/bin/openocd -s "${OCD}/scripts" -f "${OCD}/scripts/k1921/k1921vk01t/connect_stlink.cfg" -c "reset halt" -c "program ${BDIR}/${PNAME}.elf verify reset exit"
+
+erase:
+	${OCD}/bin/openocd -s "${OCD}/scripts" -f "${OCD}/scripts/k1921/k1921vk01t/connect_stlink.cfg" -c "reset halt" -c "flash erase_sector 0 0 last" -c "exit"
 
 connect:
 	${OCD}/bin/openocd -s ${DDIR} -f ${DDIR}/connect_stlink.cfg -l ${DDIR}/ocdlog.txt -c "reset halt"

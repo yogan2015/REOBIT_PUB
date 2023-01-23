@@ -62,18 +62,18 @@ int16 main()
     Init_CLK();  
     Init_GPIO();
     // конфигурация MODBUS RTU
-        TMbRTUPort *Mb;
-        TMbSlaveInfo *SlaveInfo;
-        TMbGetData *GetData;
-        TMbGetRecord *GetRecord;
+        static TMbRTUPort *Mb;
+        static TMbSlaveInfo *SlaveInfo;
+        static TMbGetData *GetData;
+        static TMbGetRecord *GetRecord;
 
-        UART_Init_TypeDef *UART0_Init;
+        static UART_Init_TypeDef *UART0_Init;
     #define Part1
     #define Part2
     #define Part3
     #ifdef Part1
-        SlaveInfo->DeviceDescr      = 'Z';
-        SlaveInfo->DeviceInfo       = 'V';
+        SlaveInfo->DeviceDescr      = 0;
+        SlaveInfo->DeviceInfo       = 0;
         SlaveInfo->DeviceNumber     = 0;
         SlaveInfo->SlaveID          = 0;
         SlaveInfo->VersionDate      = 0;
@@ -89,7 +89,7 @@ int16 main()
         Mb->Params.StopBits         = 1;
         Mb->Params.UserMode         = 0;
         Mb->Params.RetryCount       = 0;
-        Mb->Params.Scale            = 120000000/1000;
+        Mb->Params.Scale            = 4;
         Mb->Params.RxDelay          = 5;
         Mb->Params.TxDelay          = 2;
         Mb->Params.ConnTimeout      = (uint16_t)(3.0*SYSTICK_FREQ);
@@ -116,11 +116,11 @@ int16 main()
     NT_GPIOC->ALTFUNCCLR_bit.ALTFUNCCLR = (1 << 13);
     NT_GPIOC->OUTENSET_bit.OUTENSET |= (0b111111 << 8);
     NT_GPIOC->DATA |=(0b011111<<8);
-    
+
     int16 phase = 6;
     while(1)
     {
-        phase = (!phase) ? (5) : (phase-1);
+        phase = (!phase) ? (5) : (--phase);
         pulsar(phase);
     }
 }
