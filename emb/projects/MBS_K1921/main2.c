@@ -1,18 +1,60 @@
 #ifdef RELPATH
     #include "main.h"
     #include "modbus_rtu.h"
+
+    #include "./src/rb_uart.c"
 #else
     #include "./inc/main.h"
     #include "../../cmn/modbus/modbus_rtu.h"
+    #include "./src/rb_uart.c"
 #endif
 
 #include "./src/board_MBS.c"  // конфигурация платы, содержит реализацию Init_CLK(), Init_GPIO()
 
 #define SYSTICK_FREQ 2000
 
+static void inline pulsar(int16 p)
+{
+        for (int32 j = 0; j<120000; j++)
+        { asm("nop");  asm("nop");  asm("nop"); asm("nop");  asm("nop");  asm("nop");}
+        switch (p)
+        {
+        case 0:
+            NT_GPIOC->DATA |= (1<< 8);
+            NT_GPIOC->DATA &=~(1<<13);
+            break;
+        
+        case 1:
+            NT_GPIOC->DATA |= (1<< 9);
+            NT_GPIOC->DATA &=~(1<< 8);
+            break;
+
+        case 2:
+            NT_GPIOC->DATA |= (1<<10);
+            NT_GPIOC->DATA &=~(1<< 9);
+            break;
+
+        case 3:
+            NT_GPIOC->DATA |= (1<<11);
+            NT_GPIOC->DATA &=~(1<<10);
+            break;
+
+        case 4:
+            NT_GPIOC->DATA |= (1<<12);
+            NT_GPIOC->DATA &=~(1<<11);
+            break;
+
+        case 5:
+            NT_GPIOC->DATA |= (1<<13);
+            NT_GPIOC->DATA &=~(1<<12);
+            break;
+        default:
+            break;
+        }
+}
+
 int16 main()
 {
-    int16 phase = 6;
     uint16_t a = 1;
     uint32_t b = 1;
     int16_t  c = 1;
@@ -65,7 +107,6 @@ int16 main()
         UART0_Init->UART_TxEn       = ENABLE;
     #endif
 
-
     //UART_Init(NT_UART0, UART0_Init);
     NT_GPIOC->ALTFUNCCLR_bit.ALTFUNCCLR = (1 << 8 );
     NT_GPIOC->ALTFUNCCLR_bit.ALTFUNCCLR = (1 << 9 );
@@ -75,45 +116,12 @@ int16 main()
     NT_GPIOC->ALTFUNCCLR_bit.ALTFUNCCLR = (1 << 13);
     NT_GPIOC->OUTENSET_bit.OUTENSET |= (0b111111 << 8);
     NT_GPIOC->DATA |=(0b011111<<8);
+    
+    int16 phase = 6;
     while(1)
     {
-        for (int32 j = 0; j<120000; j++)
-        { asm("nop");  asm("nop");  asm("nop"); asm("nop");  asm("nop");  asm("nop");}
-        phase++;
-        if (phase>5) phase = 0;
-            switch (phase)
-            {
-            case 0:
-                NT_GPIOC->DATA |= (1<< 8);
-                NT_GPIOC->DATA &=~(1<<13);
-                break;
-            
-            case 1:
-                NT_GPIOC->DATA |= (1<< 9);
-                NT_GPIOC->DATA &=~(1<< 8);
-                break;
-
-            case 2:
-                NT_GPIOC->DATA |= (1<<10);
-                NT_GPIOC->DATA &=~(1<< 9);
-                break;
-
-            case 3:
-                NT_GPIOC->DATA |= (1<<11);
-                NT_GPIOC->DATA &=~(1<<10);
-                break;
-
-            case 4:
-                NT_GPIOC->DATA |= (1<<12);
-                NT_GPIOC->DATA &=~(1<<11);
-                break;
-
-            case 5:
-                NT_GPIOC->DATA |= (1<<13);
-                NT_GPIOC->DATA &=~(1<<12);
-                break;
-            default:
-                break;
-            }
+        phase = (!phase) ? (5) : (phase-1);
+        pulsar(phase);
     }
 }
+

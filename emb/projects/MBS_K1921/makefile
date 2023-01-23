@@ -13,7 +13,8 @@ GDB		= ${prefix}/arm-none-eabi-gdb
 OCD		= ${CURDIR}/../../../utils/openocd-win
 
 #===( INCLUDE )===
-INC 	= -I${PDIR}/inc
+INC 	= -I${PDIR}
+INC    += -I${PDIR}/inc
 INC    += -I${PDIR}/../../cmn/core
 INC    += -I${PDIR}/../../cmn/target
 INC    += -I${PDIR}/../../cmn/cmsis

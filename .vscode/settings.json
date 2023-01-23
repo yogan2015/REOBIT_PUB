@@ -37,7 +37,8 @@
         "core_cm4.h": "c",
         "dsp.h": "c",
         "niietcm4.h": "c",
-        "niietcm4_dma.h": "c"
+        "niietcm4_dma.h": "c",
+        "modbus_rtu.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.dimInactiveRegions": false

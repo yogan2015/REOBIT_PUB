@@ -30,16 +30,14 @@
 #define __CM4_REV               0x0001	//в K1921VK01T.h есть объ€вление __CM4F_REV, но в core_cm4.h провер€етс€ именно __CM4_REV. ≈сли не объ€влено там объ€вл€етс€ нулем и больше нигде, вроде, не используетс€ эта константа
 #define __CHECK_DEVICE_DEFINES
 
-
-#include <stdint.h>
-
-
 #ifdef RELPATH
-    #include "K1921BK01T.h"
+    #include "k1921vk01t_IRQn_type.h"
     #include "core_cm4.h"             /* Cortex-M4 processor and core peripherals */
+    #include "K1921BK01T.h"
 #else
-    #include "../../../cmn/target/K1921BK01T.h"
+    #include "../inc/k1921vk01t_IRQn_type.h"
     #include "../../../cmn/core/core_cm4.h"
+    #include "../../../cmn/target/K1921BK01T.h"
 #endif
 
 
