@@ -1,8 +1,12 @@
 PNAME 	= baza_f103
 PDIR	= ${CURDIR}/..#./projects/${имя проекта}
 BDIR    = ${CURDIR}
-prefix	= C:/arm-none-eabi/bin
+UDIR	= ${CURDIR}/../../../utils
+
 minsetup =  -nostartfiles -nostdlib -nodefaultlibs -nolibc 
+
+include ${UDIR}/toolchain/toolchain.path
+prefix  = ${gccpath}
 
 CC		= ${prefix}/arm-none-eabi-gcc
 LD		= ${prefix}/arm-none-eabi-gcc
@@ -53,7 +57,7 @@ LDFLAGS = -T${PDIR}/script.ld --specs=nosys.specs ${minsetup} ${ADDLIB}
 
 all:	main.o startup.o	
 	@echo ===
-	@echo linking ${PNAME}.elf from $^.o
+	@echo linking ${PNAME}.elf from $^
 	${LD} ${LDFLAGS} -g -o ${PNAME}.elf $^
 	${OCOP} -O binary ${PNAME}.elf ${PNAME}.bin
 	${SZ} ${PNAME}.elf

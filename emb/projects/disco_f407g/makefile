@@ -1,7 +1,10 @@
 PNAME 	= disco_f407g
 PDIR	= ${CURDIR}/..#./projects/${имя проекта}
 BDIR    = ${CURDIR}
-prefix	= C:/arm-none-eabi/bin
+UDIR	= ${CURDIR}/../../../utils
+
+include ${UDIR}/toolchain/toolchain.path
+prefix  = ${gccpath}
 
 CC		= ${prefix}/arm-none-eabi-gcc
 LD		= ${prefix}/arm-none-eabi-gcc

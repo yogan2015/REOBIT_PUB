@@ -2,7 +2,10 @@ PNAME 	= MBS_K1921
 PDIR	= ${CURDIR}/..#./projects/${имя проекта}
 BDIR    = ${CURDIR}
 DDIR    = ${CURDIR}/../debug
-prefix	= C:/arm-none-eabi/bin
+UDIR	= ${CURDIR}/../../../utils
+
+include ${UDIR}/toolchain/toolchain.path
+prefix  = ${gccpath}
 
 CC		= ${prefix}/arm-none-eabi-gcc
 LD		= ${prefix}/arm-none-eabi-gcc
@@ -43,7 +46,7 @@ CFLAGS += -O0 -w -g ${minsetup} ${DEF} ${INC}
 
 minsetup =  -nostartfiles -nostdlib -nodefaultlibs -nolibc 
 AFLAGS	= -mthumb -mcpu=cortex-m3 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g ${minsetup}
-LDFLAGS = -T${PDIR}/script.ld -Xlinker --gc-sections -specs=nosys.specs  -g ${minsetup} ${ADDLIB}
+LDFLAGS = -T${PDIR}/script.ld -Xlinker --gc-sections --specs=nosys.specs -g ${minsetup} ${ADDLIB}
 
 %.o:	${PDIR}/%.c
 	@echo ===
@@ -64,6 +67,7 @@ all:	main2.o startup.o ${SRCo}
 	@echo ===
 	@echo [SOURCES]: ${SRC}
 	@echo [OBJECTS]: ${SRCo}
+	@echo [using toolchain from] ${gccpath}
 	@echo linking ${PNAME}.elf from $^.o
 	${LD} ${LDFLAGS} -o ${PNAME}.elf $^
 	${OCOP} -O binary ${PNAME}.elf ${PNAME}.bin
