@@ -26,6 +26,7 @@ INC    += -I${PDIR}/../../cmn/modbus
 
 #===( SOURCES )===
 SRC = $(wildcard ${PDIR}/src/niietcm4_*.c)
+SRC+= $(wildcard ${PDIR}/src/rb_*.c)
 SRCo = $(subst .c,.o,$(SRC))
 
 #===( LIBS )===

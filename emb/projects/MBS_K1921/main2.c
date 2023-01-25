@@ -15,8 +15,6 @@
 
 static void inline pulsar(int16 p)
 {
-        for (int32 j = 0; j<120000; j++)
-        { asm("nop");  asm("nop");  asm("nop"); asm("nop");  asm("nop");  asm("nop");}
         switch (p)
         {
         case 0:
@@ -61,6 +59,8 @@ int16 main()
     int32_t  d = 1;
     Init_CLK();  
     Init_GPIO();
+    Init_TIM0();
+    Init_PWM_common();
     // конфигурация MODBUS RTU
         static TMbRTUPort *Mb;
         static TMbSlaveInfo *SlaveInfo;
@@ -115,13 +115,29 @@ int16 main()
     NT_GPIOC->ALTFUNCCLR_bit.ALTFUNCCLR = (1 << 12);
     NT_GPIOC->ALTFUNCCLR_bit.ALTFUNCCLR = (1 << 13);
     NT_GPIOC->OUTENSET_bit.OUTENSET |= (0b111111 << 8);
-    NT_GPIOC->DATA |=(0b011111<<8);
-
-    int16 phase = 6;
-    while(1)
+    NT_GPIOC->DATA |=(0b111111<<8);
+    while (1)
     {
-        phase = (!phase) ? (5) : (--phase);
-        pulsar(phase);
+        ;
     }
+    
 }
 
+void TIM0_IRQHandler (void)
+{
+    //phase = (phase < 0)?(5):(phase-1);
+    //pulsar(phase);
+    NT_GPIOC->DATA ^= (1<< 8);
+    if (NT_PWM5->TBSTS_bit.CTRDIR == 0)
+    {
+        NT_GPIOC->DATA |= (1<<9);
+    } else
+    {
+        NT_GPIOC->DATA &=~(1<<9);
+    }
+    
+    p = (p<0x10)?(0x1FF0):(p-1);
+    NT_PWM3->CMPA_bit.CMPA = p;
+    NT_PWM3->CMPB_bit.CMPB = p;
+    NT_TIMER0->INTSTATUS_INTCLEAR_bit.INT = 1;
+}

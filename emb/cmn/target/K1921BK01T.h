@@ -21,12 +21,6 @@
 * FILE K1921BK01T.h
 */
 
-#ifdef RELPATH
-  
-#else
-  #include "./k1921vk01t_IRQn_type.h"
-#endif
-
 #if __STDC__ == 1
 //#error This file can not be used in Strict ANSI mode
 #endif
@@ -50,11 +44,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/******************************************************************************/
-/*                  K1921BK01T Interrupt Number Definition                    */
-/*        Используем отд. файл k1921vk01t_IRQn_type                           */
-/******************************************************************************/
 
 /******************************************************************************/
 /*                         ADC controller registers                           */

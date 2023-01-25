@@ -35,6 +35,12 @@
 
     #include "niietcm4.h" // этот файл инклюдит niietcm4_conf.h, который инклюдит избранную периферию
 
+    #include "rb_tim.h"
+    #include "rb_uart.h"
+    
+    
+    static int16 phase = 5;
+    static uint16_t p = 0;
     static inline void Init_CLK(void);
     static inline void Init_GPIO(void);
     static inline void Init_UART0(void);
