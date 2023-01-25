@@ -1,4 +1,4 @@
-PNAME 	= nucleo-H743
+PNAME 	= nucleo_H743
 PDIR	= ${CURDIR}/..#./projects/${имя проекта}
 BDIR    = ${CURDIR}
 UDIR	= ${CURDIR}/../../../utils
