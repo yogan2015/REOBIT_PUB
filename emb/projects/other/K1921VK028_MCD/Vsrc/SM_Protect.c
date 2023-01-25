@@ -1,0 +1,252 @@
+/*!
+    Copyright 2017 	АО "НИИЭТ" и ООО "НПФ ВЕКТОР"
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+ \file      SMProtect.c
+ \brief     Модуль защит.   (см. TSM_Protect)
+ \author    ООО "НПФ Вектор". http://motorcontrol.ru
+ \version   v 2.0 25/03/2016
+
+ \addtogroup SMProtect
+ @{ */
+
+#include "DSP.h"
+#include "main.h"
+#include "stdlib.h"
+
+int16 WriteCounter = 0;
+
+//!Инициализация
+
+//!Присваивание всяких переменных
+//! \memberof TSM_Protect
+void SM_Protect_Init(TSM_Protect *p) {
+	p->state_prev = 0xff;
+	p->state = 0x00;
+}
+
+//! Быстрый расчет.
+
+//!Обрабатывает все аварии и при их возникновении останавливает привод.
+//! \memberof TSM_Protect
+void SM_Protect_Fast_Calc(TSM_Protect *p) {
+
+	//аппаратная авария от инвертора
+	if (pwm.PDP_Fault) {
+		if ((sm_ctrl.state != CTRL_STOP) && (sm_ctrl.state != CTRL_RUN))
+			sm_prot.bit_fault1 |= F_PDPINT;
+	}
+
+	if (!DRV_FAULT) {
+		//имеется какая-то аппаратная авария
+		sm_prot.bit_fault1 |= F_PDPINT;
+	}
+
+	if (!DRV_FAULT1) {
+		//имеется какая-то аппаратная авария
+		sm_prot.bit_fault2 |= F_PDP_SWITCH_A0;
+	}
+
+	if (!DRV_FAULT2) {
+		//имеется какая-то аппаратная авария
+		sm_prot.bit_fault2 |= F_PDP_SWITCH_A1;
+	}
+
+	if (!DRV_FAULT3) {
+		//имеется какая-то аппаратная авария
+		sm_prot.bit_fault2 |= F_PDP_SWITCH_A2;
+	}
+
+	if (!DRV_FAULT4) {
+		//имеется какая-то аппаратная авария
+		sm_prot.bit_fault2 |= F_PDP_SWITCH_LOWER;
+	}
+
+	/*Защита от пуска при незашунтированном реле плавного заряда ЗПТ*/
+	if (udControl.Enabled == 1) {           //Если есть цепь шунтирования ЗПТ, то выставляем аварии по выполнению условий
+	    if (udControl.fault_start == 1)
+	        sm_prot.bit_fault1 |= F_RELAY_START;
+	}
+
+	/*Авария, если программа записана в загрузочную область памяти (BFLASH)*/
+	if (programMemType == 0x4) {
+	    sm_prot.bit_fault1 |= F_PROGRAM_IS_ON_BFLASH;
+	}
+
+	/*Защита по максимальному току*/
+	if (adc.Imeas_a > sm_prot.Imax_protect)
+		sm_prot.bit_fault2 |= F_CTRL_MAX_I_PH_A;
+	if (adc.Imeas_a < -sm_prot.Imax_protect)
+		sm_prot.bit_fault2 |= F_CTRL_MAX_I_PH_A;
+	if (adc.Imeas_b > sm_prot.Imax_protect)
+		sm_prot.bit_fault2 |= F_CTRL_MAX_I_PH_B;
+	if (adc.Imeas_b < -sm_prot.Imax_protect)
+		sm_prot.bit_fault2 |= F_CTRL_MAX_I_PH_B;
+	if (adc.Imeas_c > sm_prot.Imax_protect)
+		sm_prot.bit_fault2 |= F_CTRL_MAX_I_PH_C;
+	if (adc.Imeas_c < -sm_prot.Imax_protect)
+		sm_prot.bit_fault2 |= F_CTRL_MAX_I_PH_C;
+
+	//при превышении скорости выше аварийной нормы 
+	if (labs(cur_par.speed) > sm_prot.speed_max) {
+		sm_prot.bit_fault2 |= F_CTRL_SPEED_MAX; // максиммальное Ud
+	}
+
+	//при превышении напряжения выше аварийной нормы 
+	if (adc.Udc_meas > sm_prot.Umax_protect) {
+		sm_prot.bit_fault1 |= F_CTRL_HI_UDC; // максиммальное Ud
+	}
+
+	//снижение напряжения
+	if (adc.Udc_meas < sm_prot.Umin_protect) { //если привод работал то ловим аварию
+		if (sm_ctrl.state != CTRL_STOP) {
+			sm_prot.bit_fault1 |= F_CTRL_LOW_UDC;
+		}
+	}
+
+	//при превышении температуры выше аварийной нормы
+	if (adc.T_meas > sm_prot.T_max) {
+		sm_prot.bit_fault1 |= F_CTRL_HI_TEMP; // максимальная температура
+	}
+
+#ifdef HW_MCB3_SIMULATOR
+	if(model.fault){
+		sm_prot.bit_fault1 |= F_MODEL_FAULT;
+	}
+#endif
+
+
+	DINT; //Запрещение прерываний
+		  //Аварии, требующие полного останова
+	p->masked_bit_fault1 = p->bit_fault1 & p->mask_fault1;//маскирование флагов аварий
+	p->masked_bit_fault2 = p->bit_fault2 & p->mask_fault2;
+	EINT;      //Разрешение прерываний
+
+
+	//считаем дискретный автомат защит
+	if (p->state_prev != p->state) //смена состояния?
+		p->E = 1;//Возводим флаг первого вхождения "entry"
+	else
+		p->E = 0;//иначе сбрасываем
+	p->state_prev = p->state;
+
+	switch (p->state) {//в зависимости от текущего состояния
+	case PROT_OFF: { //Защита выключена
+		if (p->E == 1) { //Первое вхождение
+		}
+
+		//Обнуляем все аварии
+		p->bit_fault1 = 0;
+		p->bit_fault2 = 0;
+
+		//Пропускаем некоторый таймаут после включения контроллера
+		//чтобы не ловить ложные срабатывания аварий АЦП
+		if (p->powered_okCounter++ > 30000) {
+			p->state = PROT_ON_OK;
+		}
+		break;
+	}
+
+	case PROT_ON_OK: {  //Норма
+		if (p->E == 1) {        //Первое вхождение
+			drv_status.bit.fault = 0;
+		}
+		//есть аварии?
+		if ((p->masked_bit_fault1 | p->masked_bit_fault2) != 0) {
+			p->state = PROT_FAIL; //переходим в состояние аварии
+		}
+		break;
+	}
+
+	case PROT_FAIL: { //состояние аварии (сработала защита)
+		if (p->E == 1) {
+			cmd.all = 0;
+		}
+		drv_status.bit.fault = 1;
+		//Выключение ШИМ. Пока там все остальные дискретные автоматы пробурлятся, чтобы их не ждать
+		pwm.Off(&pwm);
+		//логика сбороса аварии
+		if ((cmd.bit.trip_reset == 1) || (RESET_FAULT_BUTTON == 1)) {//команда на сброс аварии
+			p->state = PROT_ON_OK;//идем в "норма"
+			p->clearDrvFault = 1;	//отправить драйверу ключей команду сброса
+			//обнуляем все флаги аварий
+			p->bit_fault1 = 0;
+			p->bit_fault2 = 0;
+			cmd.all = 0;//командное слово
+
+			if (udControl.Enabled == 1) {        //Если есть цепь шунтирования ЗПТ, то сбрасываем возможные состояния аварий
+			    udControl.fault_start = 0;
+            }
+
+			//в самом низу!!! пытаемся сбросить флаг pdp аппаратный
+			//если авария все еще имеется, то сразу произойдет прерывание
+			//и возведется флаг аварии
+			if (PWM0->TZFLG_bit.OST == 1) {  //имеется флаг аппаратной аварии
+												//флаг можно сбрасывать
+				PWM0->TZCLR = 0x7;
+				PWM1->TZCLR = 0x7;
+				PWM2->TZCLR = 0x7;
+			}
+
+			#ifdef HW_MCB3_SIMULATOR
+				model.fault=0;
+			#endif
+
+		}
+		break;
+	}
+	}
+}
+
+//! \memberof TSM_Protect
+void SM_Protect_ms_Calc(TSM_Protect *p) {
+	if (WriteCounter <= 15)   //если первое слово
+	{
+		if (((sm_prot.masked_bit_fault1 >> WriteCounter) & 0x1) != 0)  //стоит ii-й флаг аварии
+		{
+			if (((sm_prot.bit_fault_written1 >> WriteCounter) & 0x1) == 0)  //и она не записана
+			{
+				FaultLog.write(&FaultLog, WriteCounter + 1);
+				sm_prot.bit_fault_written1 |= (1 << WriteCounter);
+			}
+		}
+		else
+			sm_prot.bit_fault_written1 &= ~(1 << WriteCounter);
+	}
+	else if (WriteCounter <= 31) //второе слово
+	{
+		if (((sm_prot.masked_bit_fault2 >> (WriteCounter - 16)) & 0x1) != 0)  //стоит ii-й флаг аварии
+		{
+			if (((sm_prot.bit_fault_written2 >> (WriteCounter - 16)) & 0x1) == 0)  //и она только что поЯвилась
+			{
+				FaultLog.write(&FaultLog, WriteCounter + 1);
+				sm_prot.bit_fault_written2 |= (1 << (WriteCounter - 16));
+			}
+		}
+		else
+			sm_prot.bit_fault_written2 &= ~(1 << (WriteCounter - 16));
+	}
+	WriteCounter++;
+	if (WriteCounter >= (33 - 1))
+		WriteCounter = 0;
+}
+
+//! Медленный расчет.
+
+//! \memberof TSM_Protect
+void SM_Protect_Slow_Calc(TSM_Protect *p) {
+
+}
+
+/*@}*/
