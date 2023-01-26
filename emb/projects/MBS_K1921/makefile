@@ -64,7 +64,7 @@ LDFLAGS = -T${PDIR}/script.ld -Xlinker --gc-sections --specs=nosys.specs -g ${mi
 	@echo compiling $@ from ASM
 	$(CC) -c -o $@ $< $(AFLAGS)
 
-all:	main2.o startup.o ${SRCo}
+all:	main2.o startup.o board_MBS.o ${SRCo}
 	@echo ===
 	@echo [SOURCES]: ${SRC}
 	@echo [OBJECTS]: ${SRCo}

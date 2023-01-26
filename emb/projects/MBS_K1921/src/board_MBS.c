@@ -125,7 +125,7 @@ static inline void Init_GPIO(void)
 	NT_COMMON_REG->GPIOPCTLG_bit.PIN4 = 0;	//PWM2_A
 	NT_COMMON_REG->GPIOPCTLG_bit.PIN5 = 0;	//PWM3_A
 	NT_COMMON_REG->GPIOPCTLG_bit.PIN6 = 0;	//PWM4_A
-	NT_COMMON_REG->GPIOPCTLG_bit.PIN7 = 0;	//PWM5_A
+	NT_COMMON_REG->GPIOPCTLG_bit.PIN7 = 1;	//PWM5_A
 	NT_COMMON_REG->GPIOPCTLG_bit.PIN8 = 0;	//UART_DSR[2]
 	NT_COMMON_REG->GPIOPCTLG_bit.PIN9 = 0;	//UART_RTS[3]
 	NT_COMMON_REG->GPIOPCTLG_bit.PIN10 = 0;	// ---
@@ -167,7 +167,7 @@ static inline void Init_CLK()
 	while (NT_COMMON_REG->SYS_CLK_bit.CURR_SRC != SYSCLK_PLLCLK);	//“екущий источник тактировани€ должен совпадать с выбранным
 	
 	// –азрешение работы периферии
-	NT_COMMON_REG->APB_CLK = 0x7FFFF | 0x1000000 | 0x80000;
+	NT_COMMON_REG->APB_CLK = 0x3F << COMMON_REG_APB_CLK_PWMEN0_Pos;
 
 	for (int i = 0; i < 100; i++){//чтобы типа прошло врем€... пускай там порезетитс€
 		NT_COMMON_REG->PER_RST0=0;

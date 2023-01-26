@@ -2,7 +2,7 @@
     #include "main.h"
     #include "modbus_rtu.h"
 
-    #include "./src/rb_uart.c"
+    //#include "./src/rb_uart.c"
 #else
     #include "./inc/main.h"
     #include "../../cmn/modbus/modbus_rtu.h"
@@ -61,7 +61,15 @@ int16 main()
     Init_CLK();  
     Init_GPIO();
     Init_TIM0();
-    Init_PWM_common();
+    Init_PWM_rigt(NT_PWM0, 1);
+    Init_PWM_rigt(NT_PWM1, 1);
+    Init_PWM_rigt(NT_PWM2, 1);
+    Init_PWM_rigt(NT_PWM3, 1);
+    Init_PWM_rigt(NT_PWM4, 1);
+    Init_PWM_rigt(NT_PWM5, 1);
+
+    NT_COMMON_REG->PWM_SYNC_bit.TBCLKSYNC = 0x01FF;
+
     // конфигурация MODBUS RTU
         static TMbRTUPort *Mb;
         static TMbSlaveInfo *SlaveInfo;
@@ -118,6 +126,14 @@ int16 main()
     NT_GPIOC->OUTENSET_bit.OUTENSET |= (0b111111 << 8);
     NT_GPIOC->DATA |=(0b111111<<8);
     EINT;
+    NT_PWM0->TBCTL_bit.CTRMODE      = 0x10;
+    //NT_PWM1->TBCTL_bit.CTRMODE      = 0x10;
+    //NT_PWM2->TBCTL_bit.CTRMODE      = 0x10;
+    NT_PWM3->TBCTL_bit.CTRMODE      = 0x10;
+    NT_PWM4->TBCTL_bit.CTRMODE      = 0x10;
+    NT_PWM5->TBCTL_bit.CTRMODE      = 0x10;
+
+    NT_PWM6->TBCTL_bit.CTRMODE      = 0x10;
     while (1)
     {
         ;
@@ -130,14 +146,24 @@ void TIM0_IRQHandler (void)
     //return;
     //phase = (phase < 0)?(5):(phase-1);
     //pulsar(phase);
-    NT_GPIOC->DATA ^= (1 << 9);
-    if (NT_PWM0->TBSTS & PWM_TBSTS_CTRDIR_Msk)
-    {
-        NT_GPIOC->DATA |= (1<<8);
-    } else
-    {
-        NT_GPIOC->DATA &=~(1<<8);
-    }
+    //NT_GPIOC->DATA ^= (1 << 8);
+    //if (NT_PWM3->TBCTR > rb_PWM_HALFPERIOD)
+    //{
+    //    NT_GPIOC->DATA |= (1<<9);
+    //    NT_GPIOC->DATA &=~(1<<10);
+    //} else
+    //{
+    //    NT_GPIOC->DATA &=~(1<<9);
+    //    NT_GPIOC->DATA |= (1<<10);
+    //}    
+    
+    if (NT_PWM0->TBSTS & PWM_TBSTS_CTRDIR_Msk) NT_GPIOC->DATA ^=(1 << 8);
+    if (NT_PWM1->TBSTS & PWM_TBSTS_CTRDIR_Msk) NT_GPIOC->DATA ^=(1 << 9);
+    if (NT_PWM2->TBSTS & PWM_TBSTS_CTRDIR_Msk) NT_GPIOC->DATA ^=(1 <<10);
+    if (NT_PWM3->TBSTS & PWM_TBSTS_CTRDIR_Msk) NT_GPIOC->DATA ^=(1 <<11);
+    if (NT_PWM4->TBSTS & PWM_TBSTS_CTRDIR_Msk) NT_GPIOC->DATA ^=(1 <<12);
+    if (NT_PWM5->TBSTS & PWM_TBSTS_CTRDIR_Msk) NT_GPIOC->DATA ^=(1 <<13);
+
     NT_TIMER0->INTSTATUS_INTCLEAR_bit.INT = 1;
 }
 
@@ -145,5 +171,4 @@ extern void EPWM_0_IRQHandler(void)
 {
     NT_GPIOC->DATA ^= (1<< 13);
     NT_PWM0->ETCLR |= 0x1;
-    while(1){}
 }

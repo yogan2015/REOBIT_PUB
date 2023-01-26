@@ -14,6 +14,7 @@ OCOP	= ${prefix}/arm-none-eabi-objcopy
 SZ		= ${prefix}/arm-none-eabi-size
 ODUM	= ${prefix}/arm-none-eabi-objdump
 GDB		= ${prefix}/arm-none-eabi-gdb
+OCD		= ${CURDIR}/../../../utils/openocd-win
 
 #===( INCLUDE )===
 INC 	= -I${PDIR}/inc
@@ -68,5 +69,11 @@ info:
 	@echo BDIR = ${BDIR}
 	@echo project ${PNAME}
 
-debug:	${PNAME}.elf
-	${GDB} $< -x run.gdb
+program:
+	${OCD}/bin/openocd -s "${OCD}/scripts" -f "${OCD}/scripts/k1921/k1921vk01t/connect_stlink.cfg" -c "reset halt" -c "program ${BDIR}/${PNAME}.elf verify reset exit"
+
+erase:
+	${OCD}/bin/openocd -s "${OCD}/scripts" -f "${OCD}/scripts/k1921/k1921vk01t/connect_stlink.cfg" -c "reset halt" -c "flash erase_sector 0 0 last" -c "exit"
+
+connect:
+	${OCD}/bin/openocd -s "${OCD}/scripts" -f ${OCD}/scripts/target/stm32f1x.cfg -c "reset halt"

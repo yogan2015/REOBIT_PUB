@@ -53,5 +53,10 @@ static inline void config_NVIC  (void);
 
 void main(void);
 
+#define p_s 580
+#define p_m (2*p_s)
+#define p_l (p_s+p_m)
+#define p_half (p_l/2)
+
 #define rb_general_include
 #endif

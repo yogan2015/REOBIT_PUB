@@ -29,7 +29,10 @@
     //#define __INT32_TYPE__  signed long int
     //#define __UINT32_TYPE__ unsigned long int
     //#define __STDC_HOSTED__ 0                     // на всякий случай
-    
+
+    #define rb_TIM_PERIOD       0x1F0000
+    #define rb_PWM_PERIOD       0x1FFF
+    #define rb_PWM_HALFPERIOD   0x0FFF
     #include "DSP.h"
     #include "modbus_rtu.h"
 

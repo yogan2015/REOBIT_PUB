@@ -39,7 +39,8 @@
         "niietcm4.h": "c",
         "niietcm4_dma.h": "c",
         "modbus_rtu.h": "c",
-        "rb_tim.h": "c"
+        "rb_tim.h": "c",
+        "pwm_macros.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.dimInactiveRegions": false
