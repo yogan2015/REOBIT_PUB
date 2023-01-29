@@ -67,7 +67,7 @@ int16 main()
     Init_PWM_rigt(NT_PWM3, 1);
     Init_PWM_rigt(NT_PWM4, 1);
     Init_PWM_rigt(NT_PWM5, 1);
-
+    
     NT_COMMON_REG->PWM_SYNC_bit.TBCLKSYNC = 0x01FF;
 
     // конфигурация MODBUS RTU
