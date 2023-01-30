@@ -53,6 +53,8 @@
     //static inline void Init_MB(void);
 
     int16 main(void);
+    void MARKER(void);
+
 
 
 #endif /* VINCLUDE_MAIN_H_ */

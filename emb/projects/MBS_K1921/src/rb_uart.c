@@ -4,33 +4,20 @@
     #include "../inc/main.h"
 #endif
 
-    static inline void Init_UART0()
-    {
-        UART_Init_TypeDef* UART0_Config;
+void Init_UART(NT_UART_TypeDef* port)
+   {
+        port->CR_bit.UARTEN = 0;
+        while (port->FR_bit.BUSY)
+        {
+            asm("nop");
+        }
+        port->LCR_H_bit.FEN = 1;
 
-        UART0_Config->UART_DataWidth    = UART_DataWidth_8;
-        UART0_Config->UART_FIFOEn       = DISABLE;
-        UART0_Config->UART_FIFOLevelRx  = UART_FIFOLevel_1_2;
-        UART0_Config->UART_FIFOLevelTx  = UART_FIFOLevel_1_2;
-        UART0_Config->UART_ParityBit    = UART_ParityBit_Disable;
-        UART0_Config->UART_StopBit      = UART_StopBit_1;
-        UART0_Config->UART_RxEn         = ENABLE;
-        UART0_Config->UART_TxEn         = ENABLE;
+        port->IBRD = 39;        //115200
+        port->FBRD = 4;
 
-        UART_Init(NT_UART0, &UART0_Config);
-    }
+        port->CR_bit.TXE = 1;
+        port->ICR_bit.TXIC = 1; // transmit complete
 
-    static inline void Init_UART1()
-    {
-        ;
-    }
-
-    static inline void Init_UART2()
-    {
-        ;
-    }
-
-    static inline void Init_UART3()
-    {
-        ;
-    }
+        port->CR_bit.UARTEN = 1;
+   }

@@ -15,7 +15,7 @@ static uint16_t phase = 1740;
 static char sector = 0;
 
 void SystemInit()   
-{
+{   
     __disable_irq();
     config_RCC();
     config_GPIO();
