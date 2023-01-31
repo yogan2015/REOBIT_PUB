@@ -16,7 +16,7 @@ void Exec(void)
     }
     else
     {
-      v->Out = v->medium << 2;
+      v->Out = v->medium >> 10;
     }
   }
   else
